@@ -144,8 +144,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 </div>
 
 <div class="key-bar" id="keyBar">
-  <span>Gemini API Key：</span>
-  <input type="password" id="keyInput" placeholder="AIzaSy... （輸入後會儲存在瀏覽器）">
+  <span>Claude API Key：</span>
+  <input type="password" id="keyInput" placeholder="sk-ant-... （輸入後會儲存在瀏覽器）">
   <button onclick="saveKey()">儲存</button>
 </div>
 
@@ -187,11 +187,11 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 
 <script>
 // ── API Key 管理 ─────────────────────────────────────────────────
-function getKey() { return localStorage.getItem('gemini_key') || ''; }
+function getKey() { return localStorage.getItem('claude_key') || ''; }
 function saveKey() {
   const k = document.getElementById('keyInput').value.trim();
   if (!k) return;
-  localStorage.setItem('gemini_key', k);
+  localStorage.setItem('claude_key', k);
   document.getElementById('keyBar').classList.add('saved');
   document.getElementById('keyInput').value = '';
 }
@@ -224,24 +224,29 @@ function loadFile(file) {
   reader.readAsDataURL(file);
 }
 
-// ── Gemini API 呼叫 ──────────────────────────────────────────────
-async function callGemini(parts) {
+// ── Claude API 呼叫 ──────────────────────────────────────────────
+async function callClaude(messages) {
   const key = getKey();
-  if (!key) throw new Error('請先設定 Gemini API Key');
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { responseMimeType: 'application/json', temperature: 0.1 }
-      })
-    }
-  );
+  if (!key) throw new Error('請先設定 Claude API Key');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6-20250827',
+      max_tokens: 4096,
+      messages
+    })
+  });
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+  const text = data.content?.[0]?.text || '{}';
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  return jsonMatch ? jsonMatch[0] : '{}';
 }
 
 // ── 分析 ─────────────────────────────────────────────────────────
@@ -268,10 +273,13 @@ async function analyse() {
 - frequency請翻譯成中文(QD=每日一次, BID=每日兩次, TID=每日三次, QID=每日四次, HS=睡前, PRN=需要時)
 - 若截圖模糊請盡量推測${extra ? `\n\n補充說明：${extra}` : ''}`;
 
-    const raw1 = await callGemini([
-      { inline_data: { mime_type: imgType, data: imgBase64 } },
-      { text: recognizePrompt }
-    ]);
+    const raw1 = await callClaude([{
+      role: 'user',
+      content: [
+        { type: 'image', source: { type: 'base64', media_type: imgType, data: imgBase64 } },
+        { type: 'text', text: recognizePrompt }
+      ]
+    }]);
     const { drugs } = JSON.parse(raw1);
     if (!drugs?.length) { showError('未辨識到藥物', '請確認截圖包含處方內容'); return; }
 
@@ -294,7 +302,7 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 - appearance 請描述該藥物的實際外觀（顏色、形狀、刻字），若不確定請寫「請依實際藥物核對」
 - patient_note 要溫暖易懂，像護理師在跟病患說話`;
 
-    const raw2 = await callGemini([{ text: eduPrompt }]);
+    const raw2 = await callClaude([{ role: 'user', content: eduPrompt }]);
     const { edu } = JSON.parse(raw2);
     renderCards(drugs, edu || []);
 
