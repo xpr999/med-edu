@@ -1,0 +1,6 @@
+{
+  "name": "med-edu",
+  "version": "1.0.0",
+  "description": "診所藥物衛教系統",
+  "engines": { "node": "18.x" }
+}
