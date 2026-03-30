@@ -100,11 +100,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .sched-pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
 .sched-pill{background:var(--teal);color:#fff;border-radius:20px;padding:5px 14px;font-size:.78rem;font-weight:600}
 
-.appear-tile{background:#f5eefb;border:1px solid #d7b8ed;border-radius:10px;padding:13px 15px}
-.appear-tile .tile-label{color:var(--purple)}
-.appear-tile .tile-val{color:#4a0080;font-size:.83rem;line-height:1.6}
-.appear-img{max-width:120px;border-radius:8px;margin-top:8px;border:1px solid #d7b8ed}
-
 .side-tile{background:#fff8f0;border:1px solid #ffd5a8;border-radius:10px;padding:13px 15px}
 .side-tile .tile-label{color:#bf4000}
 .side-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
@@ -733,13 +728,12 @@ async function analyse() {
 ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose||''} ${d.frequency||''} ${d.timing||''}`).join('\n')}
 
 格式：
-{"edu":[{"index":0,"purpose":"此藥用途一句話口語化","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"appearance":"藥物外觀描述顏色形狀","patient_note":"給病患的溫馨叮嚀1-2句"}]}
+{"edu":[{"index":0,"purpose":"此藥用途一句話口語化","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"patient_note":"給病患的溫馨叮嚀1-2句"}]}
 
 要求：
 - schedule_times 根據 frequency 和 timing 推算時間點
 - warnings 給出最重要的3條注意事項
 - side_effects 列出最常見的3-4個
-- appearance 描述實際外觀（顏色、形狀、刻字），不確定寫「請依實際藥物核對」
 - patient_note 溫暖易懂，像護理師在跟病患說話`;
 
     const raw2 = await callClaude([{ role: 'user', content: eduPrompt }]);
@@ -940,12 +934,6 @@ async function renderCards(drugs, edu) {
           <div class="sched-tile">
             <div class="tile-label">建議服藥時間</div>
             <div class="sched-pills">${schedHTML}</div>
-          </div>
-
-          <div class="appear-tile">
-            <div class="tile-label">藥物外觀</div>
-            <div class="tile-val">${e.appearance || '請依實際藥物核對'}</div>
-            ${photo ? `<img class="appear-img" src="${photo}" alt="${db?.alias||''}">` : ''}
           </div>
 
           ${sideHTML ? `
