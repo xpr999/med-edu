@@ -171,6 +171,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
       <div class="spinner"></div>
       <span class="btn-text">辨識並生成衛教單</span>
     </button>
+    <button class="btn-analyse" style="background:#6a1b9a;box-shadow:0 2px 8px rgba(106,27,154,.3)" onclick="runDemo()">
+      <span class="btn-text">展示模式（免 API Key）</span>
+    </button>
     <div id="chipSection" style="display:none">
       <div class="label-sm">辨識到的藥物</div>
       <div class="chip-list" id="chipList"></div>
@@ -417,6 +420,29 @@ function renderCards(drugs, edu) {
         </div>
       </div>`);
   });
+}
+
+// ── 展示模式 ─────────────────────────────────────────────────────
+function runDemo() {
+  clearResults();
+  const drugs = [
+    {brand_name:"Flupine 0.25mg",generic_name:"flupenthixol",chinese_name:"福安源",dose:"0.25mg",frequency:"每日一次",timing:"早上",days:"28",quantity:"28"},
+    {brand_name:"Mocalm 0.5/10mg",generic_name:"moclobemide / lorazepam",chinese_name:"永康",dose:"0.5/10mg",frequency:"每日一次",timing:"早上",days:"28",quantity:"28"},
+    {brand_name:"Alpraline 0.5mg",generic_name:"alprazolam",chinese_name:"安柏寧",dose:"0.5mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
+    {brand_name:"Valdoxan 25mg",generic_name:"agomelatine",chinese_name:"煩多閃",dose:"25mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
+    {brand_name:"Zolon 7.5mg",generic_name:"zopiclone",chinese_name:"樂比克",dose:"7.5mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
+    {brand_name:"Solaxin 200mg",generic_name:"chlorzoxazone",chinese_name:"舒肉筋",dose:"200mg",frequency:"需要時使用",timing:"需要時",days:"7",quantity:"7"}
+  ];
+  const edu = [
+    {index:0,purpose:"幫助穩定情緒、減輕焦慮與緊張感",schedule_times:["08:00 早餐後"],warnings:["服藥期間避免飲酒","初期可能有輕微嗜睡，開車請注意","不可自行突然停藥"],side_effects:["嗜睡","口乾","輕微頭暈","疲倦感"],appearance:"白色圓形小錠，一面有刻痕",patient_note:"這顆藥會幫助您白天的情緒更穩定，如果覺得太累可以跟醫師討論調整。"},
+    {index:1,purpose:"改善情緒低落、減輕憂鬱與焦慮症狀",schedule_times:["08:00 早餐後"],warnings:["避免與含酪胺食物（如起司、紅酒）同時大量食用","服藥期間避免飲酒","如出現異常興奮或躁動請回診"],side_effects:["頭暈","噁心","失眠","口乾"],appearance:"白色橢圓形膜衣錠",patient_note:"這顆藥幫助提升您的情緒，通常需要1-2週才會感受到完整效果，請耐心服用。"},
+    {index:2,purpose:"緩解焦慮、幫助放鬆與入睡",schedule_times:["22:00 睡前30分鐘"],warnings:["本藥可能產生依賴性，請遵照醫師處方劑量","服藥後請直接準備就寢，避免從事需注意力的活動","勿自行增加劑量或突然停藥"],side_effects:["嗜睡","頭暈","記憶力短暫下降","肌肉無力"],appearance:"白色圓形錠劑，中間有刻痕",patient_note:"這顆藥幫助您睡前放鬆，吃完就準備上床休息，不要再做其他事情喔。"},
+    {index:3,purpose:"改善憂鬱症狀、調節睡眠節律",schedule_times:["22:00 睡前"],warnings:["服藥期間需定期追蹤肝功能","避免飲酒","如出現皮膚或眼白變黃、深色尿液，請立即回診"],side_effects:["頭痛","噁心","頭暈","疲倦"],appearance:"橘黃色橢圓形膜衣錠，刻有數字",patient_note:"這顆藥除了改善心情，也能幫助您建立正常的睡眠規律，記得每天同一時間服用效果最好。"},
+    {index:4,purpose:"幫助入睡、改善睡眠品質",schedule_times:["22:00 睡前15-30分鐘"],warnings:["服藥後請立即就寢","本藥有依賴風險，請依醫師指示服用","不可與酒精併用"],side_effects:["口中金屬味","嗜睡","頭暈","口乾"],appearance:"白色至淡黃色圓形膜衣錠",patient_note:"吃了這顆藥就直接躺下睡覺，不要再滑手機了喔！如果覺得早上起來還有殘留的暈，可以告訴醫師。"},
+    {index:5,purpose:"緩解肌肉緊繃、痠痛不適",schedule_times:["需要時服用，每日最多3次"],warnings:["可能引起嗜睡，服藥後避免開車或操作機械","如有腸胃不適可隨餐服用","本藥為需要時使用，無需固定服用"],side_effects:["嗜睡","頭暈","腸胃不適","皮疹（罕見）"],appearance:"淡綠色圓形錠劑",patient_note:"肌肉痠痛的時候才吃就好，不用每天固定吃。吃了可能會有點想睡，這是正常的。"}
+  ];
+  renderChips(drugs);
+  renderCards(drugs, edu);
 }
 
 function showError(title, msg) {
