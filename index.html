@@ -10,25 +10,30 @@
   --teal:#0d7e7e;--teal-lt:#e8f7f7;--teal-md:#b2dede;
   --ink:#1a2630;--muted:#6b8898;--border:#dde8ec;
   --warn:#e65100;--green:#2e7d32;--paper:#f5fafa;
-  --purple:#6a1b9a;--orange:#e65100;
+  --purple:#6a1b9a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
 
-/* HEADER */
 .header{background:linear-gradient(135deg,#0a6666 0%,var(--teal) 100%);padding:16px 28px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,.2)}
 .header-icon{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
 .header h1{font-size:1.15rem;font-weight:700;color:#fff}
 .header p{font-size:.75rem;color:rgba(255,255,255,.75);margin-top:2px}
 
-/* LAYOUT */
-.layout{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 74px)}
+/* API KEY BAR */
+.key-bar{background:#fff8e1;border-bottom:1px solid #ffe082;padding:10px 28px;display:flex;align-items:center;gap:10px;font-size:.82rem}
+.key-bar input{flex:1;border:1px solid #ffe082;border-radius:6px;padding:6px 10px;font-size:.82rem;font-family:inherit}
+.key-bar button{background:var(--teal);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.82rem;cursor:pointer;font-family:inherit;font-weight:600}
+.key-bar button:hover{background:#0a6060}
+.key-bar.saved{background:#e8f5e9;border-color:#a5d6a7}
+.key-bar.saved::before{content:'Key 已儲存';color:var(--green);font-weight:600;margin-right:8px}
+
+.layout{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 120px)}
 
 /* SIDEBAR */
 .sidebar{background:#fff;border-right:1px solid var(--border);padding:22px 18px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
 .label-sm{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 
-/* UPLOAD */
 .upload-area{border:2px dashed var(--teal-md);border-radius:12px;background:var(--teal-lt);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .upload-area:hover{border-color:var(--teal);background:#d4f0f0}
 .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
@@ -37,11 +42,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .upload-area .upload-text strong{color:var(--teal);display:block;font-size:.9rem}
 #preview{width:100%;max-height:200px;object-fit:contain;border-radius:9px;border:1px solid var(--border);background:#f0f5f5;display:none;margin-top:10px}
 
-/* TEXTAREA */
 .extra-input{width:100%;background:#f5f7f8;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.82rem;font-family:inherit;color:var(--ink);resize:vertical;min-height:68px;line-height:1.6;transition:border-color .2s}
 .extra-input:focus{outline:none;border-color:var(--teal)}
 
-/* BUTTON */
 .btn-analyse{width:100%;background:var(--teal);color:#fff;border:none;border-radius:10px;padding:13px;font-size:.95rem;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s;box-shadow:0 2px 8px rgba(13,126,126,.3)}
 .btn-analyse:hover:not(:disabled){background:#0a6060;box-shadow:0 4px 14px rgba(13,126,126,.4);transform:translateY(-1px)}
 .btn-analyse:disabled{background:#9fbec2;cursor:not-allowed;box-shadow:none;transform:none}
@@ -50,7 +53,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .btn-analyse.loading .btn-text{opacity:.7}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* DRUG CHIPS */
 .chip-list{display:flex;flex-direction:column;gap:7px}
 .chip{border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .2s;background:#fff;position:relative}
 .chip:hover,.chip.active{border-color:var(--teal);background:var(--teal-lt)}
@@ -58,23 +60,19 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .chip .cmeta{font-size:.74rem;color:var(--muted);margin-top:3px}
 .chip .cbadge{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--teal);color:#fff;font-size:.64rem;border-radius:5px;padding:2px 7px;font-weight:700}
 
-/* MAIN */
 .main{padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:20px}
 .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);text-align:center;padding:40px 0}
 .empty-state .ei{font-size:4rem;opacity:.25}
 .empty-state p{font-size:.88rem;line-height:1.7;max-width:280px}
 
-/* EDU HEADER */
 .edu-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .edu-top h2{font-family:'Noto Serif TC',serif;font-size:1.2rem;color:var(--teal)}
 .edu-top .date{font-size:.74rem;color:var(--muted)}
 .btn-print{background:#fff;color:var(--teal);border:1.5px solid var(--teal);border-radius:8px;padding:8px 16px;font-size:.82rem;font-family:inherit;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
 .btn-print:hover{background:var(--teal-lt)}
 
-/* DRUG CARD */
 .drug-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:box-shadow .2s}
 .drug-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09)}
-
 .card-head{background:linear-gradient(135deg,var(--teal) 0%,#0b9090 100%);color:#fff;padding:16px 20px;display:flex;align-items:flex-start;gap:16px}
 .pill-icon{width:68px;height:68px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
 .card-head-info h3{font-size:1.08rem;font-weight:700}
@@ -83,7 +81,6 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .badge{background:rgba(255,255,255,.22);border-radius:5px;padding:2px 8px;font-size:.68rem;font-weight:600}
 
 .card-body{padding:18px 20px;display:flex;flex-direction:column;gap:13px}
-
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .info-tile{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
 .tile-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
@@ -114,22 +111,26 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .note-tile .tile-label{color:var(--green)}
 .note-tile p{font-size:.83rem;color:#1a4d1e;line-height:1.75}
 
-/* ERROR */
 .err-box{background:#fff0f0;border:1px solid #ffaaaa;border-radius:10px;padding:16px 18px;color:#9b0000;font-size:.85rem;line-height:1.6}
 .err-box strong{display:block;font-size:.95rem;margin-bottom:4px}
 
-/* PRINT */
+.upload-area.drag{border-color:var(--teal);background:#c8ecec}
+
+/* STATUS */
+.status-msg{text-align:center;padding:8px;font-size:.82rem;color:var(--muted);font-style:italic}
+
 @media print{
-  .header,.sidebar,.edu-top .btn-print{display:none!important}
+  .header,.sidebar,.edu-top .btn-print,.key-bar{display:none!important}
   .layout{display:block}
   .main{padding:0}
   .drug-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px}
   body{background:#fff}
   .fda-btn{display:none}
 }
-
-/* DRAG OVER */
-.upload-area.drag{border-color:var(--teal);background:#c8ecec}
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{border-right:none;border-bottom:1px solid var(--border)}
+}
 </style>
 </head>
 <body>
@@ -142,9 +143,13 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
   </div>
 </div>
 
-<div class="layout">
+<div class="key-bar" id="keyBar">
+  <span>Gemini API Key：</span>
+  <input type="password" id="keyInput" placeholder="AIzaSy... （輸入後會儲存在瀏覽器）">
+  <button onclick="saveKey()">儲存</button>
+</div>
 
-  <!-- SIDEBAR -->
+<div class="layout">
   <div class="sidebar">
     <div>
       <div class="label-sm">上傳處方截圖</div>
@@ -158,43 +163,44 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
       </div>
       <img id="preview" alt="預覽">
     </div>
-
     <div>
       <div class="label-sm">補充說明（選填）</div>
       <textarea class="extra-input" id="extraInput" placeholder="例：早晚各一、飯後服用、特殊交代…"></textarea>
     </div>
-
     <button class="btn-analyse" id="analyseBtn" disabled onclick="analyse()">
       <div class="spinner"></div>
-      <span class="btn-text">🔍 辨識並生成衛教單</span>
+      <span class="btn-text">辨識並生成衛教單</span>
     </button>
-
     <div id="chipSection" style="display:none">
       <div class="label-sm">辨識到的藥物</div>
       <div class="chip-list" id="chipList"></div>
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main" id="mainPanel">
     <div class="empty-state" id="emptyState">
       <div class="ei">💊</div>
       <p>請上傳診所系統截圖<br>AI 將自動辨識所有藥物<br>並生成可列印的衛教單</p>
     </div>
   </div>
-
 </div>
 
 <script>
-// ── 設定 ──────────────────────────────────────────────────────────
-// 部署到 Vercel 後，把下面的 API_URL 改成你的 Vercel 網域
-// 例：const API_URL = 'https://med-edu.vercel.app/api/analyse';
-const API_URL = '/api/analyse';
-
-// ── 狀態 ─────────────────────────────────────────────────────────
-let imgBase64 = null, imgType = 'image/jpeg';
+// ── API Key 管理 ─────────────────────────────────────────────────
+function getKey() { return localStorage.getItem('gemini_key') || ''; }
+function saveKey() {
+  const k = document.getElementById('keyInput').value.trim();
+  if (!k) return;
+  localStorage.setItem('gemini_key', k);
+  document.getElementById('keyBar').classList.add('saved');
+  document.getElementById('keyInput').value = '';
+}
+(function initKey() {
+  if (getKey()) document.getElementById('keyBar').classList.add('saved');
+})();
 
 // ── 上傳 ─────────────────────────────────────────────────────────
+let imgBase64 = null, imgType = 'image/jpeg';
 document.getElementById('fileInput').addEventListener('change', e => loadFile(e.target.files[0]));
 const ua = document.getElementById('uploadArea');
 ua.addEventListener('dragover', e => { e.preventDefault(); ua.classList.add('drag'); });
@@ -218,39 +224,86 @@ function loadFile(file) {
   reader.readAsDataURL(file);
 }
 
+// ── Gemini API 呼叫 ──────────────────────────────────────────────
+async function callGemini(parts) {
+  const key = getKey();
+  if (!key) throw new Error('請先設定 Gemini API Key');
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts }],
+        generationConfig: { responseMimeType: 'application/json', temperature: 0.1 }
+      })
+    }
+  );
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+}
+
 // ── 分析 ─────────────────────────────────────────────────────────
 async function analyse() {
   if (!imgBase64) return;
   const btn = document.getElementById('analyseBtn');
   btn.disabled = true;
   btn.classList.add('loading');
-  btn.querySelector('.btn-text').textContent = '分析中…';
-
+  btn.querySelector('.btn-text').textContent = '辨識藥物中…';
   clearResults();
 
+  const extra = document.getElementById('extraInput').value;
+
   try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        imageBase64: imgBase64,
-        mediaType: imgType,
-        extra: document.getElementById('extraInput').value
-      })
-    });
+    // Step 1: 辨識藥物
+    const recognizePrompt = `你是一位精神科藥物辨識AI。這是診所系統的處方截圖（通常是表格）。
+請辨識截圖中所有被開立的藥物，以純JSON格式回傳。
 
-    const data = await res.json();
-    if (!res.ok || data.error) throw new Error(data.error || '伺服器錯誤');
+格式：
+{"drugs":[{"brand_name":"商品名","generic_name":"學名英文小寫","chinese_name":"中文名","dose":"劑量","frequency":"頻次如每日一次/早晚各一","timing":"服藥時機如飯後/睡前","days":"天數數字或null","quantity":"數量或null"}]}
 
-    renderChips(data.drugs || []);
-    renderCards(data.drugs || [], data.edu || []);
+注意：
+- 若看到診所代碼(如BUR00/RIT00/YOU10等)也請對應辨識
+- frequency請翻譯成中文(QD=每日一次, BID=每日兩次, TID=每日三次, QID=每日四次, HS=睡前, PRN=需要時)
+- 若截圖模糊請盡量推測${extra ? `\n\n補充說明：${extra}` : ''}`;
+
+    const raw1 = await callGemini([
+      { inline_data: { mime_type: imgType, data: imgBase64 } },
+      { text: recognizePrompt }
+    ]);
+    const { drugs } = JSON.parse(raw1);
+    if (!drugs?.length) { showError('未辨識到藥物', '請確認截圖包含處方內容'); return; }
+
+    renderChips(drugs);
+    btn.querySelector('.btn-text').textContent = '生成衛教內容中…';
+
+    // Step 2: 生成衛教說明
+    const eduPrompt = `你是一位資深精神科護理師，使用繁體中文。請為以下藥物生成衛教說明，以純JSON格式回傳。
+
+藥物列表：
+${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose||''} ${d.frequency||''} ${d.timing||''}`).join('\n')}
+
+格式：
+{"edu":[{"index":0,"purpose":"此藥用途一句話口語化例如幫助穩定情緒改善睡眠","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["重要警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"appearance":"藥物外觀描述顏色形狀刻字","patient_note":"給病患的溫馨叮嚀1-2句口語化"}]}
+
+要求：
+- schedule_times 請根據 frequency 和 timing 推算實際時間點
+- warnings 請針對該藥物類別給出最重要的3條注意事項
+- side_effects 列出最常見的3-4個
+- appearance 請描述該藥物的實際外觀（顏色、形狀、刻字），若不確定請寫「請依實際藥物核對」
+- patient_note 要溫暖易懂，像護理師在跟病患說話`;
+
+    const raw2 = await callGemini([{ text: eduPrompt }]);
+    const { edu } = JSON.parse(raw2);
+    renderCards(drugs, edu || []);
 
   } catch (err) {
     showError('分析失敗', err.message);
   } finally {
     btn.disabled = false;
     btn.classList.remove('loading');
-    btn.querySelector('.btn-text').textContent = '🔍 辨識並生成衛教單';
+    btn.querySelector('.btn-text').textContent = '辨識並生成衛教單';
   }
 }
 
@@ -258,28 +311,28 @@ async function analyse() {
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('chipSection').style.display = 'none';
-  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box').forEach(e=>e.remove());
+  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.status-msg').forEach(e=>e.remove());
 }
 
-// ── 藥物 chips ────────────────────────────────────────────────────
+// ── chips ────────────────────────────────────────────────────────
 function renderChips(drugs) {
   if (!drugs.length) return;
   const sec = document.getElementById('chipSection');
   const list = document.getElementById('chipList');
   sec.style.display = 'block';
   list.innerHTML = drugs.map((d,i) => `
-    <div class="chip" onclick="scrollTo('card-${i}')">
+    <div class="chip" onclick="scrollToCard('card-${i}')">
       <div class="cname">💊 ${d.brand_name||d.chinese_name||d.generic_name}</div>
       <div class="cmeta">${d.generic_name||''} · ${d.dose||''} · ${d.frequency||''}</div>
-      <span class="cbadge">${d.days||'?'}天</span>
+      ${d.days ? `<span class="cbadge">${d.days}天</span>` : ''}
     </div>`).join('');
 }
 
-function scrollTo(id) {
+function scrollToCard(id) {
   document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── 衛教卡 ────────────────────────────────────────────────────────
+// ── 衛教卡片 ─────────────────────────────────────────────────────
 function renderCards(drugs, edu) {
   const panel = document.getElementById('mainPanel');
   const now = new Date();
@@ -288,17 +341,16 @@ function renderCards(drugs, edu) {
   panel.insertAdjacentHTML('beforeend', `
     <div class="edu-top">
       <div>
-        <h2>📋 藥物衛教單</h2>
+        <h2>藥物衛教單</h2>
         <div class="date">開立日期：${date}</div>
       </div>
-      <button class="btn-print" onclick="window.print()">🖨️ 列印衛教單</button>
+      <button class="btn-print" onclick="window.print()">列印衛教單</button>
     </div>`);
 
   drugs.forEach((d, i) => {
     const e = edu.find(x => x.index === i) || {};
-    const fdaURL = `https://info.fda.gov.tw/MLMS/H0001.aspx?Drug_Name=${encodeURIComponent(d.brand_name||d.generic_name||'')}`;
     const schedHTML = (e.schedule_times || [d.timing || d.frequency || '依醫囑'])
-      .map(t => `<span class="sched-pill">⏰ ${t}</span>`).join('');
+      .map(t => `<span class="sched-pill">${t}</span>`).join('');
     const warnHTML = (e.warnings || ['請依醫師指示服藥','勿自行停藥','如有不適請回診'])
       .map(w => `<li>${w}</li>`).join('');
     const sideHTML = (e.side_effects || []).map(s => `<span class="side-tag">${s}</span>`).join('');
@@ -309,7 +361,7 @@ function renderCards(drugs, edu) {
           <div class="pill-icon">💊</div>
           <div class="card-head-info">
             <h3>${d.brand_name||d.chinese_name||''} ${d.dose||''}</h3>
-            <div class="sub">${d.generic_name||''} &nbsp;|&nbsp; ${d.chinese_name||''}</div>
+            <div class="sub">${d.generic_name||''} | ${d.chinese_name||''}</div>
             <div class="badges">
               ${d.frequency ? `<span class="badge">${d.frequency}</span>` : ''}
               ${d.days ? `<span class="badge">${d.days}天份</span>` : ''}
@@ -325,7 +377,7 @@ function renderCards(drugs, edu) {
             </div>
             <div class="info-tile">
               <div class="tile-label">服藥方式</div>
-              <div class="tile-val">${d.frequency||''}${d.timing ? '・'+d.timing : ''}${d.days ? '・共'+d.days+'天' : ''}</div>
+              <div class="tile-val">${d.frequency||''}${d.timing ? ' · '+d.timing : ''}${d.days ? ' · 共'+d.days+'天' : ''}</div>
             </div>
           </div>
 
@@ -335,24 +387,23 @@ function renderCards(drugs, edu) {
           </div>
 
           <div class="appear-tile">
-            <div class="tile-label">💊 藥物外觀</div>
-            <div class="tile-val">${e.appearance || '請見外包裝'}</div>
-            <a class="fda-btn" href="${fdaURL}" target="_blank">🔍 食藥署查詢圖片</a>
+            <div class="tile-label">藥物外觀</div>
+            <div class="tile-val">${e.appearance || '請依實際藥物核對'}</div>
           </div>
 
           ${sideHTML ? `
           <div class="side-tile">
-            <div class="tile-label">⚠️ 可能副作用</div>
+            <div class="tile-label">可能副作用</div>
             <div class="side-tags">${sideHTML}</div>
           </div>` : ''}
 
           <div class="warn-tile">
-            <div class="tile-label">⛔ 注意事項</div>
+            <div class="tile-label">注意事項</div>
             <ul>${warnHTML}</ul>
           </div>
 
           <div class="note-tile">
-            <div class="tile-label">💬 給您的叮嚀</div>
+            <div class="tile-label">給您的叮嚀</div>
             <p>${e.patient_note || '請按時服藥，不要自行調整劑量。如有任何不適，請立即回診告知醫師。'}</p>
           </div>
         </div>
@@ -362,7 +413,7 @@ function renderCards(drugs, edu) {
 
 function showError(title, msg) {
   document.getElementById('mainPanel').insertAdjacentHTML('beforeend',
-    `<div class="err-box"><strong>❌ ${title}</strong>${msg}</div>`);
+    `<div class="err-box"><strong>${title}</strong>${msg}</div>`);
 }
 </script>
 </body>
