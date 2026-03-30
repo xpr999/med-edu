@@ -114,6 +114,30 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .note-tile .tile-label{color:var(--green)}
 .note-tile p{font-size:.83rem;color:#1a4d1e;line-height:1.75}
 
+/* SUMMARY TABLE */
+.summary-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.summary-title{background:linear-gradient(135deg,var(--teal),#0b9090);color:#fff;padding:12px 20px;font-size:.95rem;font-weight:700;font-family:'Noto Serif TC',serif}
+.summary-list{display:flex;flex-direction:column}
+.summary-row{display:flex;gap:14px;padding:12px 18px;border-bottom:1px solid var(--border);align-items:flex-start}
+.summary-row:last-child{border-bottom:none}
+.summary-row:hover{background:#f8fbfd}
+.summary-drug{display:flex;align-items:center;gap:10px;min-width:180px;flex-shrink:0}
+.summary-img{width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+.summary-pill{width:44px;height:44px;border-radius:8px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.summary-name{font-weight:700;font-size:.88rem;color:var(--ink)}
+.summary-dose{font-weight:400;color:var(--teal);font-size:.78rem}
+.summary-purpose{font-size:.78rem;color:var(--muted);margin-top:2px}
+.summary-details{flex:1;display:flex;flex-direction:column;gap:3px}
+.summary-warn{font-size:.78rem;color:#c0392b;font-weight:500;line-height:1.5}
+.summary-sides{font-size:.74rem;color:var(--muted);line-height:1.5}
+.summary-note{font-size:.76rem;color:var(--green);line-height:1.5;font-style:italic}
+
+body.elder .summary-name{font-size:1.1rem}
+body.elder .summary-purpose{font-size:.95rem}
+body.elder .summary-warn{font-size:.95rem}
+body.elder .summary-sides{font-size:.9rem}
+body.elder .summary-note{font-size:.9rem}
+
 .err-box{background:#fff0f0;border:1px solid #ffaaaa;border-radius:10px;padding:16px 18px;color:#9b0000;font-size:.85rem;line-height:1.6}
 .err-box strong{display:block;font-size:.95rem;margin-bottom:4px}
 
@@ -278,7 +302,8 @@ body.elder .simple-slot-hd{font-size:1.2rem}
   .layout{display:block}
   .main{padding:0}
   .drug-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px}
-  .sched-wrap,.interact-wrap,.simple-card{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
+  .sched-wrap,.interact-wrap,.simple-card,.summary-wrap{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
+  .summary-row{break-inside:avoid}
   .mode-bar{display:none!important}
   body{background:#fff}
 }
@@ -843,7 +868,7 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('chipSection').style.display = 'none';
-  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap,.interact-wrap,.simple-card').forEach(e=>e.remove());
+  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap,.interact-wrap,.simple-card,.summary-wrap').forEach(e=>e.remove());
 }
 
 function renderChips(drugs) {
@@ -1024,74 +1049,45 @@ async function renderCards(drugs, edu, interactions) {
   // 服藥時間表
   panel.insertAdjacentHTML('beforeend', renderScheduleTable(drugs, edu, photos));
 
-  // 簡單模式（冰箱貼）
-  if (simpleMode) {
-    panel.insertAdjacentHTML('beforeend', renderSimpleCard(drugs, edu, photos));
-  }
+  // 簡單模式：只印時間表 + 交互作用 + 精簡摘要
+  // 一般模式：加上每藥一行的精簡摘要表
+  panel.insertAdjacentHTML('beforeend', renderSummaryTable(drugs, edu, photos));
+}
+
+// ── 精簡摘要表（取代冗長的個別卡片）──────────────────────────────
+function renderSummaryTable(drugs, edu, photos) {
+  let html = `<div class="summary-wrap">
+    <div class="summary-title">藥物重點說明</div>
+    <div class="summary-list">`;
 
   drugs.forEach((d, i) => {
     const e = edu.find(x => x.index === i) || {};
     const db = matchDrug(d);
     const photo = db ? photos[db.code] : null;
-    const pillHTML = photo
-      ? `<img src="${photo}" alt="${db?.alias||''}">`
-      : '💊';
-    const schedHTML = (e.schedule_times || [d.timing || d.frequency || '依醫囑'])
-      .map(t => `<span class="sched-pill">${t}</span>`).join('');
-    const warnHTML = (e.warnings || ['請依醫師指示服藥','勿自行停藥','如有不適請回診'])
-      .map(w => `<li>${w}</li>`).join('');
-    const sideHTML = (e.side_effects || []).map(s => `<span class="side-tag">${s}</span>`).join('');
-    const displayName = db ? `${db.alias} (${db.chn})` : (d.brand_name||d.chinese_name||'');
+    const name = db?.alias || d.brand_name || d.chinese_name || '';
+    const topWarn = (e.warnings || []).slice(0, 2).join('；');
+    const sides = (e.side_effects || []).slice(0, 3).join('、');
 
-    panel.insertAdjacentHTML('beforeend', `
-      <div class="drug-card" id="card-${i}">
-        <div class="card-head">
-          <div class="pill-icon">${pillHTML}</div>
-          <div class="card-head-info">
-            <h3>${displayName} ${d.dose||''}</h3>
-            <div class="sub">${d.generic_name||''} | ${db?.eng||d.brand_name||''}</div>
-            <div class="badges">
-              ${d.frequency ? `<span class="badge">${d.frequency}</span>` : ''}
-              ${d.days ? `<span class="badge">${d.days}天份</span>` : ''}
-              ${d.timing ? `<span class="badge">${d.timing}</span>` : ''}
-            </div>
-          </div>
+    html += `<div class="summary-row">
+      <div class="summary-drug">
+        ${photo
+          ? `<img class="summary-img" src="${photo}" alt="${name}">`
+          : `<div class="summary-pill">💊</div>`}
+        <div class="summary-drug-info">
+          <div class="summary-name">${name} <span class="summary-dose">${d.dose||''}</span></div>
+          <div class="summary-purpose">${e.purpose || '依醫師說明'}</div>
         </div>
-        <div class="card-body">
-          <div class="two-col">
-            <div class="info-tile">
-              <div class="tile-label">用途說明</div>
-              <div class="tile-val">${e.purpose || '依醫師說明'}</div>
-            </div>
-            <div class="info-tile">
-              <div class="tile-label">服藥方式</div>
-              <div class="tile-val">${d.frequency||''}${d.timing ? ' · '+d.timing : ''}${d.days ? ' · 共'+d.days+'天' : ''}</div>
-            </div>
-          </div>
-
-          <div class="sched-tile">
-            <div class="tile-label">建議服藥時間</div>
-            <div class="sched-pills">${schedHTML}</div>
-          </div>
-
-          ${sideHTML ? `
-          <div class="side-tile">
-            <div class="tile-label">可能副作用</div>
-            <div class="side-tags">${sideHTML}</div>
-          </div>` : ''}
-
-          <div class="warn-tile">
-            <div class="tile-label">注意事項</div>
-            <ul>${warnHTML}</ul>
-          </div>
-
-          <div class="note-tile">
-            <div class="tile-label">給您的叮嚀</div>
-            <p>${e.patient_note || '請按時服藥，不要自行調整劑量。如有任何不適，請立即回診告知醫師。'}</p>
-          </div>
-        </div>
-      </div>`);
+      </div>
+      <div class="summary-details">
+        ${topWarn ? `<div class="summary-warn">⚠ ${topWarn}</div>` : ''}
+        ${sides && !simpleMode ? `<div class="summary-sides">可能副作用：${sides}</div>` : ''}
+        ${e.patient_note && !simpleMode ? `<div class="summary-note">${e.patient_note}</div>` : ''}
+      </div>
+    </div>`;
   });
+
+  html += `</div></div>`;
+  return html;
 }
 
 // ══════════════════════════════════════════════════════════════════
