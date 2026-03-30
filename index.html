@@ -20,7 +20,13 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .header h1{font-size:1.15rem;font-weight:700;color:#fff}
 .header p{font-size:.75rem;color:rgba(255,255,255,.75);margin-top:2px}
 
-/* API KEY BAR */
+/* NAV TABS */
+.nav-tabs{display:flex;background:#fff;border-bottom:2px solid var(--border)}
+.nav-tab{flex:1;padding:12px;text-align:center;font-size:.88rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;color:var(--muted)}
+.nav-tab:hover{background:var(--teal-lt)}
+.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+
+/* KEY BAR */
 .key-bar{background:#fff8e1;border-bottom:1px solid #ffe082;padding:10px 28px;display:flex;align-items:center;gap:10px;font-size:.82rem}
 .key-bar input{flex:1;border:1px solid #ffe082;border-radius:6px;padding:6px 10px;font-size:.82rem;font-family:inherit}
 .key-bar button{background:var(--teal);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.82rem;cursor:pointer;font-family:inherit;font-weight:600}
@@ -28,9 +34,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .key-bar.saved{background:#e8f5e9;border-color:#a5d6a7}
 .key-bar.saved::before{content:'Key 已儲存';color:var(--green);font-weight:600;margin-right:8px}
 
-.layout{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 120px)}
+/* PAGE CONTAINERS */
+.page{display:none}
+.page.active{display:block}
 
-/* SIDEBAR */
+/* ===== EDU PAGE ===== */
+.layout{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 160px)}
 .sidebar{background:#fff;border-right:1px solid var(--border);padding:22px 18px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
 .label-sm{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 
@@ -56,7 +65,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .chip-list{display:flex;flex-direction:column;gap:7px}
 .chip{border:1px solid var(--border);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .2s;background:#fff;position:relative}
 .chip:hover,.chip.active{border-color:var(--teal);background:var(--teal-lt)}
-.chip .cname{font-weight:600;font-size:.86rem;display:flex;align-items:center;gap:6px}
+.chip .cname{font-weight:600;font-size:.86rem}
 .chip .cmeta{font-size:.74rem;color:var(--muted);margin-top:3px}
 .chip .cbadge{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--teal);color:#fff;font-size:.64rem;border-radius:5px;padding:2px 7px;font-weight:700}
 
@@ -71,10 +80,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .btn-print{background:#fff;color:var(--teal);border:1.5px solid var(--teal);border-radius:8px;padding:8px 16px;font-size:.82rem;font-family:inherit;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
 .btn-print:hover{background:var(--teal-lt)}
 
-.drug-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:box-shadow .2s}
-.drug-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.09)}
+.drug-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .card-head{background:linear-gradient(135deg,var(--teal) 0%,#0b9090 100%);color:#fff;padding:16px 20px;display:flex;align-items:flex-start;gap:16px}
-.pill-icon{width:68px;height:68px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+.pill-icon{width:68px;height:68px;background:rgba(255,255,255,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;overflow:hidden}
+.pill-icon img{width:100%;height:100%;object-fit:cover;border-radius:10px}
 .card-head-info h3{font-size:1.08rem;font-weight:700}
 .card-head-info .sub{font-size:.76rem;opacity:.8;margin-top:3px}
 .badges{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
@@ -94,8 +103,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .appear-tile{background:#f5eefb;border:1px solid #d7b8ed;border-radius:10px;padding:13px 15px}
 .appear-tile .tile-label{color:var(--purple)}
 .appear-tile .tile-val{color:#4a0080;font-size:.83rem;line-height:1.6}
-.fda-btn{display:inline-flex;align-items:center;gap:5px;margin-top:9px;background:var(--purple);color:#fff;border:none;border-radius:6px;padding:5px 13px;font-size:.75rem;cursor:pointer;font-family:inherit;font-weight:600;text-decoration:none;transition:background .2s}
-.fda-btn:hover{background:#4a0080}
+.appear-img{max-width:120px;border-radius:8px;margin-top:8px;border:1px solid #d7b8ed}
 
 .side-tile{background:#fff8f0;border:1px solid #ffd5a8;border-radius:10px;padding:13px 15px}
 .side-tile .tile-label{color:#bf4000}
@@ -103,7 +111,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .side-tag{background:#ffe5c8;color:#7a2900;border-radius:5px;padding:3px 9px;font-size:.74rem;font-weight:500}
 
 .warn-tile{background:#fff8e6;border-left:4px solid var(--warn);border-radius:0 10px 10px 0;padding:13px 15px}
-.warn-tile .tile-label{color:var(--warn);display:flex;align-items:center;gap:5px}
+.warn-tile .tile-label{color:var(--warn)}
 .warn-tile ul{padding-left:18px}
 .warn-tile ul li{font-size:.82rem;line-height:1.75;color:#5c3000}
 
@@ -116,16 +124,43 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 
 .upload-area.drag{border-color:var(--teal);background:#c8ecec}
 
-/* STATUS */
-.status-msg{text-align:center;padding:8px;font-size:.82rem;color:var(--muted);font-style:italic}
+/* ===== DRUG MANAGEMENT PAGE ===== */
+.mgmt-container{max-width:1100px;margin:0 auto;padding:24px}
+.mgmt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.mgmt-header h2{font-family:'Noto Serif TC',serif;font-size:1.2rem;color:var(--teal)}
+.mgmt-stats{font-size:.82rem;color:var(--muted)}
 
+.cat-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.cat-tab{padding:7px 16px;border-radius:20px;font-size:.82rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s}
+.cat-tab:hover{border-color:var(--teal);color:var(--teal)}
+.cat-tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.cat-tab .cat-count{background:rgba(0,0,0,.1);border-radius:10px;padding:1px 7px;font-size:.72rem;margin-left:4px}
+.cat-tab.active .cat-count{background:rgba(255,255,255,.3)}
+
+.drug-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+
+.drug-item{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;transition:all .2s;position:relative}
+.drug-item:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.drug-item.has-photo{border-color:var(--teal-md)}
+.drug-item .di-photo{width:100%;height:120px;background:#f5f7f8;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden;cursor:pointer;position:relative;border:2px dashed var(--border)}
+.drug-item.has-photo .di-photo{border:1px solid var(--teal-md);background:var(--teal-lt)}
+.drug-item .di-photo img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.drug-item .di-photo .photo-placeholder{color:var(--muted);font-size:.78rem;text-align:center;line-height:1.5}
+.drug-item .di-photo input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drug-item .di-photo .delete-photo{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.7rem;cursor:pointer;display:none;align-items:center;justify-content:center}
+.drug-item.has-photo .di-photo .delete-photo{display:flex}
+.drug-item .di-name{font-weight:700;font-size:.9rem;color:var(--ink)}
+.drug-item .di-eng{font-size:.76rem;color:var(--teal);margin-top:2px}
+.drug-item .di-generic{font-size:.72rem;color:var(--muted);margin-top:2px}
+.drug-item .di-code{position:absolute;top:14px;right:14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:.68rem;color:var(--muted);font-weight:600}
+
+/* PRINT */
 @media print{
-  .header,.sidebar,.edu-top .btn-print,.key-bar{display:none!important}
+  .header,.sidebar,.edu-top .btn-print,.key-bar,.nav-tabs{display:none!important}
   .layout{display:block}
   .main{padding:0}
   .drug-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px}
   body{background:#fff}
-  .fda-btn{display:none}
 }
 @media(max-width:768px){
   .layout{grid-template-columns:1fr}
@@ -143,53 +178,312 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
   </div>
 </div>
 
-<div class="key-bar" id="keyBar">
-  <span>Claude API Key：</span>
-  <input type="password" id="keyInput" placeholder="sk-ant-... （輸入後會儲存在瀏覽器）">
-  <button onclick="saveKey()">儲存</button>
+<div class="nav-tabs">
+  <div class="nav-tab active" onclick="switchPage('edu')">衛教生成</div>
+  <div class="nav-tab" onclick="switchPage('mgmt')">藥物管理</div>
 </div>
 
-<div class="layout">
-  <div class="sidebar">
-    <div>
-      <div class="label-sm">上傳處方截圖</div>
-      <div class="upload-area" id="uploadArea">
-        <input type="file" accept="image/*" id="fileInput">
-        <div class="upload-icon">📋</div>
-        <div class="upload-text">
-          <strong>點擊選擇 或 拖曳圖片</strong>
-          診所系統截圖、PNG / JPG
-        </div>
-      </div>
-      <img id="preview" alt="預覽">
-    </div>
-    <div>
-      <div class="label-sm">補充說明（選填）</div>
-      <textarea class="extra-input" id="extraInput" placeholder="例：早晚各一、飯後服用、特殊交代…"></textarea>
-    </div>
-    <button class="btn-analyse" id="analyseBtn" disabled onclick="analyse()">
-      <div class="spinner"></div>
-      <span class="btn-text">辨識並生成衛教單</span>
-    </button>
-    <button class="btn-analyse" style="background:#6a1b9a;box-shadow:0 2px 8px rgba(106,27,154,.3)" onclick="runDemo()">
-      <span class="btn-text">展示模式（免 API Key）</span>
-    </button>
-    <div id="chipSection" style="display:none">
-      <div class="label-sm">辨識到的藥物</div>
-      <div class="chip-list" id="chipList"></div>
-    </div>
+<!-- ===== 衛教生成頁 ===== -->
+<div class="page active" id="pageEdu">
+  <div class="key-bar" id="keyBar">
+    <span>Claude API Key：</span>
+    <input type="password" id="keyInput" placeholder="sk-ant-... （輸入後會儲存在瀏覽器）">
+    <button onclick="saveKey()">儲存</button>
   </div>
 
-  <div class="main" id="mainPanel">
-    <div class="empty-state" id="emptyState">
-      <div class="ei">💊</div>
-      <p>請上傳診所系統截圖<br>AI 將自動辨識所有藥物<br>並生成可列印的衛教單</p>
+  <div class="layout">
+    <div class="sidebar">
+      <div>
+        <div class="label-sm">上傳處方截圖</div>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" accept="image/*" id="fileInput">
+          <div class="upload-icon">📋</div>
+          <div class="upload-text">
+            <strong>點擊選擇 或 拖曳圖片</strong>
+            診所系統截圖、PNG / JPG
+          </div>
+        </div>
+        <img id="preview" alt="預覽">
+      </div>
+      <div>
+        <div class="label-sm">補充說明（選填）</div>
+        <textarea class="extra-input" id="extraInput" placeholder="例：早晚各一、飯後服用、特殊交代…"></textarea>
+      </div>
+      <button class="btn-analyse" id="analyseBtn" disabled onclick="analyse()">
+        <div class="spinner"></div>
+        <span class="btn-text">辨識並生成衛教單</span>
+      </button>
+      <button class="btn-analyse" style="background:#6a1b9a;box-shadow:0 2px 8px rgba(106,27,154,.3)" onclick="runDemo()">
+        <span class="btn-text">展示模式（免 API Key）</span>
+      </button>
+      <div id="chipSection" style="display:none">
+        <div class="label-sm">辨識到的藥物</div>
+        <div class="chip-list" id="chipList"></div>
+      </div>
     </div>
+
+    <div class="main" id="mainPanel">
+      <div class="empty-state" id="emptyState">
+        <div class="ei">💊</div>
+        <p>請上傳診所系統截圖<br>AI 將自動辨識所有藥物<br>並生成可列印的衛教單</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 藥物管理頁 ===== -->
+<div class="page" id="pageMgmt">
+  <div class="mgmt-container">
+    <div class="mgmt-header">
+      <h2>藥物管理</h2>
+      <div class="mgmt-stats" id="mgmtStats"></div>
+    </div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="drug-grid" id="drugGrid"></div>
   </div>
 </div>
 
 <script>
-// ── API Key 管理 ─────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// 診所藥物資料庫（73 筆）
+// ══════════════════════════════════════════════════════════════════
+const DRUG_DB = [
+  // ── 精神科用藥 ──
+  {cat:"精神科用藥",alias:"百事隴",code:"BUR00",eng:"Busron 10mg",chn:"百事隴錠",generic:"Buspirone"},
+  {cat:"精神科用藥",alias:"思樂康",code:"QUI00",eng:"Quiapine 25mg",chn:"快安平錠",generic:"Quetiapine"},
+  {cat:"精神科用藥",alias:"煩多悶",code:"VAL00",eng:"Valdoxan 25mg",chn:"煩多悶錠",generic:"Agomelatine"},
+  {cat:"精神科用藥",alias:"Abilify 2mg",code:"ARI01",eng:"Aripizole 2mg",chn:"安銳平錠",generic:"Aripiprazole"},
+  {cat:"精神科用藥",alias:"Abilify 5mg",code:"ARI00",eng:"Aripizole 5mg",chn:"安銳平錠",generic:"Aripiprazole"},
+  {cat:"精神科用藥",alias:"Citalo",code:"SIT00",eng:"Sitalo 20mg",chn:"賽達樂錠",generic:"Citalopram"},
+  {cat:"精神科用藥",alias:"Cymbalta",code:"DUX00",eng:"Duxetine 30mg",chn:"萬憂停膠囊",generic:"Duloxetine"},
+  {cat:"精神科用藥",alias:"Deanxit",code:"MOC00",eng:"Mocalm 0.5/10mg",chn:"永康緩錠",generic:"Flupentixol/Melitracen"},
+  {cat:"精神科用藥",alias:"Depakine",code:"DIP00",eng:"Dipachro SR 500mg",chn:"帝帕克持續錠",generic:"Valproate sodium/Valproic acid"},
+  {cat:"精神科用藥",alias:"Dogmatyl",code:"SUN00",eng:"Sunpylon 50mg",chn:"舒必朗錠",generic:"Sulpiride"},
+  {cat:"精神科用藥",alias:"Effexor 37.5",code:"CAL37",eng:"Calmdown SR 37.5mg",chn:"原締平緩釋膠囊",generic:"Venlafaxine"},
+  {cat:"精神科用藥",alias:"Effexor 75",code:"EAS75",eng:"Easyfor SR 75mg",chn:"悅康持續膠囊",generic:"Venlafaxine"},
+  {cat:"精神科用藥",alias:"Lamictal",code:"LAM00",eng:"Lamta 50mg",chn:"癲諾錠",generic:"Lamotrigine"},
+  {cat:"精神科用藥",alias:"Latuda",code:"LAT00",eng:"Latuda 40mg",chn:"樂途達錠",generic:"Lurasidone"},
+  {cat:"精神科用藥",alias:"Lexapro",code:"LEE00",eng:"Leeyo 10mg",chn:"離憂錠",generic:"Escitalopram"},
+  {cat:"精神科用藥",alias:"Lexapro",code:"ESC00",eng:"Escitalo 10mg",chn:"易思坦錠",generic:"Escitalopram"},
+  {cat:"精神科用藥",alias:"Lithium",code:"LIN00",eng:"Lidin 300mg",chn:"立定錠",generic:"Lithium Carbonate"},
+  {cat:"精神科用藥",alias:"Luvox",code:"ANW00",eng:"Anwu 50mg",chn:"安暮錠",generic:"Fluvoxamine"},
+  {cat:"精神科用藥",alias:"Mesyrel",code:"MES00",eng:"Mesyrel 50mg",chn:"美舒鬱錠",generic:"Trazodone"},
+  {cat:"精神科用藥",alias:"Prozac",code:"FLU00",eng:"Fluoxetine 20mg",chn:"福濱膠囊",generic:"Fluoxetine"},
+  {cat:"精神科用藥",alias:"Remeron 15",code:"SMI15",eng:"Smilon 15mg",chn:"舒美寧錠",generic:"Mirtazapine"},
+  {cat:"精神科用藥",alias:"Remeron 30",code:"SMI30",eng:"Smilon 30mg",chn:"舒美寧錠",generic:"Mirtazapine"},
+  {cat:"精神科用藥",alias:"Risperdal",code:"APA00",eng:"Apa-risdol 1mg",chn:"鴻泓理斯得錠",generic:"Risperidone"},
+  {cat:"精神科用藥",alias:"Seroxat",code:"PAR00",eng:"Paroxin 20mg",chn:"百樂行錠",generic:"Paroxetine"},
+  {cat:"精神科用藥",alias:"Tofranil",code:"TOF10",eng:"Tofranil 10mg",chn:"妥富腦糖衣錠",generic:"Imipramine"},
+  {cat:"精神科用藥",alias:"Wellbutrin",code:"BUP01",eng:"Buporin SR 150mg",chn:"必得善持續錠",generic:"Bupropion"},
+  {cat:"精神科用藥",alias:"Winsumin",code:"WIN00",eng:"Winsumin 25mg",chn:"穩舒眠錠",generic:"Chlorpromazine"},
+  {cat:"精神科用藥",alias:"Zoloft 100",code:"YOU10",eng:"You-jet 100mg",chn:"憂解錠",generic:"Sertraline"},
+  {cat:"精神科用藥",alias:"Zoloft 50",code:"YOU05",eng:"You-jet 50mg",chn:"憂解錠",generic:"Sertraline"},
+  {cat:"精神科用藥",alias:"Zyprexa",code:"OLA00",eng:"Olan 5mg/tab",chn:"若寧錠",generic:"Olanzapine"},
+  // ── 專注力藥物 ──
+  {cat:"專注力藥物",alias:"Concerta 18",code:"CON18",eng:"Concerta 18mg",chn:"專司達長效錠",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Concerta 27",code:"CON27",eng:"Concerta 27mg",chn:"專司達長效錠",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Concerta 36",code:"CON36",eng:"Concerta 36mg",chn:"專司達長效錠",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Concerta 54",code:"CON54",eng:"Concerta 54mg",chn:"專司達長效錠",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"思有得 22",code:"MET22",eng:"Methydur 22mg",chn:"思有得膠囊",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"思有得 33",code:"MET33",eng:"Methydur 33mg",chn:"思有得膠囊",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Halcion",code:"HAL00",eng:"Halcion 0.25mg",chn:"閒樂眾錠",generic:"Triazolam"},
+  {cat:"專注力藥物",alias:"Ritalin",code:"RIT00",eng:"Ritalin 10mg",chn:"利他能錠",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Ritalin LA 10",code:"RIT10",eng:"Ritalin LA 10mg",chn:"利長能膠囊",generic:"Methylphenidate"},
+  {cat:"專注力藥物",alias:"Ritalin LA 20",code:"RIT20",eng:"Ritalin LA 20mg",chn:"利長能膠囊",generic:"Methylphenidate"},
+  // ── 安眠鎮定藥 ──
+  {cat:"安眠鎮定藥",alias:"Ativan",code:"ANX00",eng:"Anxiedin 0.5mg",chn:"安暮錠",generic:"Lorazepam"},
+  {cat:"安眠鎮定藥",alias:"Dormicum",code:"DOR00",eng:"Dormicum 7.5mg",chn:"導美睡錠",generic:"Midazolam"},
+  {cat:"安眠鎮定藥",alias:"Erispan",code:"FLU01",eng:"Flupine 0.25mg",chn:"福安源錠",generic:"Fludiazepam"},
+  {cat:"安眠鎮定藥",alias:"Eurodin",code:"ESZ00",eng:"Eszo 2mg",chn:"艾斯樂錠",generic:"Estazolam"},
+  {cat:"安眠鎮定藥",alias:"Imovane",code:"ZOL01",eng:"Zolon 7.5mg",chn:"樂比克錠",generic:"Zopiclone"},
+  {cat:"安眠鎮定藥",alias:"Lendormin",code:"LEN00",eng:"Lendormin 0.25mg",chn:"戀多眠錠",generic:"Brotizolam"},
+  {cat:"安眠鎮定藥",alias:"Lexotan 1.5",code:"BRO00",eng:"Bromazin 1.5mg",chn:"卓靜錠",generic:"Bromazepam"},
+  {cat:"安眠鎮定藥",alias:"Lexotan 3",code:"BRO01",eng:"Bromazin 3mg",chn:"卓靜錠",generic:"Bromazepam"},
+  {cat:"安眠鎮定藥",alias:"Oxazepam",code:"ALE00",eng:"Alepan 15mg",chn:"安立平錠",generic:"Oxazepam"},
+  {cat:"安眠鎮定藥",alias:"Rivotril 0.5",code:"CLO00",eng:"Clonopam 0.5mg",chn:"克癲平錠",generic:"Clonazepam"},
+  {cat:"安眠鎮定藥",alias:"Rivotril 2",code:"CLO01",eng:"Clonopam 2mg",chn:"克癲平錠",generic:"Clonazepam"},
+  {cat:"安眠鎮定藥",alias:"Serenal",code:"SEC00",eng:"Secorin 10mg",chn:"益可寧糖衣錠",generic:"Oxazolam"},
+  {cat:"安眠鎮定藥",alias:"Stilnox(柔拍)",code:"ZOL00",eng:"Zolpidem 10mg",chn:"柔拍錠",generic:"Zolpidem"},
+  {cat:"安眠鎮定藥",alias:"Stilnox",code:"STI00",eng:"Stilnox 10mg",chn:"使蒂諾斯錠",generic:"Zolpidem"},
+  {cat:"安眠鎮定藥",alias:"Xanax",code:"ALP01",eng:"Alpraline 0.5mg",chn:"安柏寧錠",generic:"Alprazolam"},
+  {cat:"安眠鎮定藥",alias:"當眠多(15)",code:"DAL15",eng:"Dalmadorm 15mg",chn:"當眠多膠囊",generic:"Flurazepam"},
+  {cat:"安眠鎮定藥",alias:"當眠多(欣得眠)",code:"SYN00",eng:"Syndoman 15mg",chn:"欣得眠膠囊",generic:"Flurazepam"},
+  // ── 輔助藥品 ──
+  {cat:"輔助藥品",alias:"Cephadol",code:"DIP01",eng:"Diphenidol 25mg",chn:"鎮芬尼朵錠",generic:"Diphenidol"},
+  {cat:"輔助藥品",alias:"Gascon",code:"DEX00",eng:"Dexicone 40mg",chn:"氣速錠",generic:"Dimethicone"},
+  {cat:"輔助藥品",alias:"Inderal",code:"CAR00",eng:"Cardolol 10mg",chn:"心康樂錠",generic:"Propranolol"},
+  {cat:"輔助藥品",alias:"MgO 軟便",code:"MGO01",eng:"MgO 250mg",chn:"氧化鎂錠",generic:"Magnesium oxide"},
+  {cat:"輔助藥品",alias:"Scanol 止痛",code:"PAR01",eng:"Paramol 500mg",chn:"普除痛錠",generic:"Acetaminophen"},
+  {cat:"輔助藥品",alias:"Sennoside",code:"THR00",eng:"Through 12mg",chn:"便通樂錠",generic:"Sennoside"},
+  {cat:"輔助藥品",alias:"Solaxin",code:"SOL00",eng:"Solaxin 200mg",chn:"舒肌筋新錠",generic:"Chlorzoxazone"},
+  {cat:"輔助藥品",alias:"麗其樂",code:"ALL00",eng:"Allevo 5mg",chn:"麗其樂",generic:"Levocetirizine"},
+  // ── 自費品項 ──
+  {cat:"自費品項",alias:"EPA 30粒",code:"*EPA0",eng:"EPA 500mg 30粒/盒",chn:"EPA",generic:"EPA"},
+  {cat:"自費品項",alias:"EPA 10粒",code:"*EPA01",eng:"EPA 500mg 10粒/排",chn:"EPA",generic:"EPA"},
+  {cat:"自費品項",alias:"ZnMg",code:"*ZNMG",eng:"ZnMg 10/50mg 60粒/盒",chn:"安鋅鎂",generic:"Zinc/Magnesium"},
+  {cat:"自費品項",alias:"D3",code:"*D3",eng:"D3 800IU 60粒/盒",chn:"D3",generic:"Cholecalciferol"},
+  {cat:"自費品項",alias:"鱸齡寧",code:"*HOG01",eng:"鱸齡寧 10粒/排",chn:"鱸齡寧",generic:"助眠保健品"},
+  {cat:"自費品項",alias:"Q10",code:"*Q10",eng:"Q10 30mg 120粒/盒",chn:"Q10",generic:"Coenzyme Q10"},
+  // ── 藥水 ──
+  {cat:"藥水",alias:"Zoloft 液",code:"CEN00",eng:"Cenzoft Sol'n 60mL",chn:"聖憂復液",generic:"Sertraline (20mg/mL)"},
+  {cat:"藥水",alias:"Risperdal 液",code:"RIS00",eng:"Risperdal Sol'n 30mL",chn:"理思必妥液",generic:"Risperidone (1mg/mL)"}
+];
+
+const CATEGORIES = [...new Set(DRUG_DB.map(d=>d.cat))];
+
+// ══════════════════════════════════════════════════════════════════
+// IndexedDB 管理藥物照片
+// ══════════════════════════════════════════════════════════════════
+const DB_NAME = 'MedEduPhotos';
+const DB_VER = 1;
+let idb = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (idb) return resolve(idb);
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore('photos', {keyPath:'code'});
+    };
+    req.onsuccess = e => { idb = e.target.result; resolve(idb); };
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+async function savePhoto(code, dataURL) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('photos','readwrite');
+    tx.objectStore('photos').put({code, dataURL});
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
+async function getPhoto(code) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').get(code);
+    req.onsuccess = () => resolve(req.result?.dataURL || null);
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+async function deletePhoto(code) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('photos','readwrite');
+    tx.objectStore('photos').delete(code);
+    tx.oncomplete = () => resolve();
+    tx.onerror = e => reject(e.target.error);
+  });
+}
+
+async function getAllPhotos() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('photos','readonly');
+    const req = tx.objectStore('photos').getAll();
+    req.onsuccess = () => {
+      const map = {};
+      (req.result||[]).forEach(r => map[r.code] = r.dataURL);
+      resolve(map);
+    };
+    req.onerror = e => reject(e.target.error);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 頁面切換
+// ══════════════════════════════════════════════════════════════════
+function switchPage(page) {
+  document.querySelectorAll('.nav-tab').forEach((t,i) => {
+    t.classList.toggle('active', (page==='edu' && i===0)||(page==='mgmt' && i===1));
+  });
+  document.getElementById('pageEdu').classList.toggle('active', page==='edu');
+  document.getElementById('pageMgmt').classList.toggle('active', page==='mgmt');
+  if (page === 'mgmt') renderMgmt();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 藥物管理頁面
+// ══════════════════════════════════════════════════════════════════
+let currentCat = '全部';
+
+async function renderMgmt() {
+  const photos = await getAllPhotos();
+  const photoCount = Object.keys(photos).length;
+  document.getElementById('mgmtStats').textContent =
+    `共 ${DRUG_DB.length} 種藥物，已上傳 ${photoCount} 張照片`;
+
+  // category tabs
+  const tabsEl = document.getElementById('catTabs');
+  const allCats = ['全部', ...CATEGORIES];
+  tabsEl.innerHTML = allCats.map(c => {
+    const cnt = c === '全部' ? DRUG_DB.length : DRUG_DB.filter(d=>d.cat===c).length;
+    return `<div class="cat-tab${c===currentCat?' active':''}" onclick="filterCat('${c}')">
+      ${c}<span class="cat-count">${cnt}</span></div>`;
+  }).join('');
+
+  // drug grid
+  const grid = document.getElementById('drugGrid');
+  const filtered = currentCat === '全部' ? DRUG_DB : DRUG_DB.filter(d=>d.cat===currentCat);
+  grid.innerHTML = filtered.map(d => {
+    const photo = photos[d.code];
+    return `<div class="drug-item${photo?' has-photo':''}">
+      <span class="di-code">${d.code}</span>
+      <div class="di-photo">
+        ${photo ? `<img src="${photo}" alt="${d.alias}">` : `<div class="photo-placeholder">點擊上傳照片</div>`}
+        <input type="file" accept="image/*" onchange="uploadDrugPhoto('${d.code}',this)">
+        <button class="delete-photo" onclick="removeDrugPhoto(event,'${d.code}')" title="刪除照片">✕</button>
+      </div>
+      <div class="di-name">${d.alias}</div>
+      <div class="di-eng">${d.eng}</div>
+      <div class="di-generic">${d.generic}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  renderMgmt();
+}
+
+async function uploadDrugPhoto(code, input) {
+  const file = input.files[0];
+  if (!file?.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    // resize to max 300px for storage efficiency
+    const img = new Image();
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      const max = 300;
+      let w = img.width, h = img.height;
+      if (w > h) { h = h * max / w; w = max; }
+      else { w = w * max / h; h = max; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataURL = canvas.toDataURL('image/jpeg', 0.85);
+      await savePhoto(code, dataURL);
+      renderMgmt();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function removeDrugPhoto(e, code) {
+  e.stopPropagation();
+  e.preventDefault();
+  await deletePhoto(code);
+  renderMgmt();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// API Key
+// ══════════════════════════════════════════════════════════════════
 function getKey() { return localStorage.getItem('claude_key') || ''; }
 function saveKey() {
   const k = document.getElementById('keyInput').value.trim();
@@ -202,7 +496,9 @@ function saveKey() {
   if (getKey()) document.getElementById('keyBar').classList.add('saved');
 })();
 
-// ── 上傳 ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// 上傳處方截圖
+// ══════════════════════════════════════════════════════════════════
 let imgBase64 = null, imgType = 'image/jpeg';
 document.getElementById('fileInput').addEventListener('change', e => loadFile(e.target.files[0]));
 const ua = document.getElementById('uploadArea');
@@ -227,7 +523,9 @@ function loadFile(file) {
   reader.readAsDataURL(file);
 }
 
-// ── Claude API 呼叫 ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// Claude API
+// ══════════════════════════════════════════════════════════════════
 async function callClaude(messages) {
   const key = getKey();
   if (!key) throw new Error('請先設定 Claude API Key');
@@ -252,7 +550,33 @@ async function callClaude(messages) {
   return jsonMatch ? jsonMatch[0] : '{}';
 }
 
-// ── 分析 ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// 藥物比對：AI 辨識結果 → 本地資料庫
+// ══════════════════════════════════════════════════════════════════
+function matchDrug(d) {
+  const searchTerms = [
+    d.brand_name, d.chinese_name, d.generic_name, d.code
+  ].filter(Boolean).map(s => s.toLowerCase().trim());
+
+  let best = null, bestScore = 0;
+  for (const db of DRUG_DB) {
+    const targets = [db.alias, db.code, db.eng, db.chn, db.generic]
+      .map(s => s.toLowerCase());
+    let score = 0;
+    for (const term of searchTerms) {
+      for (const tgt of targets) {
+        if (tgt === term) score += 10;
+        else if (tgt.includes(term) || term.includes(tgt)) score += 5;
+      }
+    }
+    if (score > bestScore) { bestScore = score; best = db; }
+  }
+  return bestScore >= 5 ? best : null;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 分析處方
+// ══════════════════════════════════════════════════════════════════
 async function analyse() {
   if (!imgBase64) return;
   const btn = document.getElementById('analyseBtn');
@@ -262,17 +586,19 @@ async function analyse() {
   clearResults();
 
   const extra = document.getElementById('extraInput').value;
+  const codeList = DRUG_DB.map(d => `${d.code}=${d.eng}(${d.chn})`).join(', ');
 
   try {
-    // Step 1: 辨識藥物
     const recognizePrompt = `你是一位精神科藥物辨識AI。這是診所系統的處方截圖（通常是表格）。
 請辨識截圖中所有被開立的藥物，以純JSON格式回傳。
 
+本診所藥物代碼對照：${codeList}
+
 格式：
-{"drugs":[{"brand_name":"商品名","generic_name":"學名英文小寫","chinese_name":"中文名","dose":"劑量","frequency":"頻次如每日一次/早晚各一","timing":"服藥時機如飯後/睡前","days":"天數數字或null","quantity":"數量或null"}]}
+{"drugs":[{"brand_name":"商品名","generic_name":"學名英文","chinese_name":"中文名","code":"診所代碼如BUR00","dose":"劑量","frequency":"頻次中文","timing":"服藥時機如飯後/睡前","days":"天數數字或null","quantity":"數量或null"}]}
 
 注意：
-- 若看到診所代碼(如BUR00/RIT00/YOU10等)也請對應辨識
+- 請盡量比對診所代碼
 - frequency請翻譯成中文(QD=每日一次, BID=每日兩次, TID=每日三次, QID=每日四次, HS=睡前, PRN=需要時)
 - 若截圖模糊請盡量推測${extra ? `\n\n補充說明：${extra}` : ''}`;
 
@@ -289,25 +615,24 @@ async function analyse() {
     renderChips(drugs);
     btn.querySelector('.btn-text').textContent = '生成衛教內容中…';
 
-    // Step 2: 生成衛教說明
     const eduPrompt = `你是一位資深精神科護理師，使用繁體中文。請為以下藥物生成衛教說明，以純JSON格式回傳。
 
 藥物列表：
 ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose||''} ${d.frequency||''} ${d.timing||''}`).join('\n')}
 
 格式：
-{"edu":[{"index":0,"purpose":"此藥用途一句話口語化例如幫助穩定情緒改善睡眠","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["重要警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"appearance":"藥物外觀描述顏色形狀刻字","patient_note":"給病患的溫馨叮嚀1-2句口語化"}]}
+{"edu":[{"index":0,"purpose":"此藥用途一句話口語化","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"appearance":"藥物外觀描述顏色形狀","patient_note":"給病患的溫馨叮嚀1-2句"}]}
 
 要求：
-- schedule_times 請根據 frequency 和 timing 推算實際時間點
-- warnings 請針對該藥物類別給出最重要的3條注意事項
+- schedule_times 根據 frequency 和 timing 推算時間點
+- warnings 給出最重要的3條注意事項
 - side_effects 列出最常見的3-4個
-- appearance 請描述該藥物的實際外觀（顏色、形狀、刻字），若不確定請寫「請依實際藥物核對」
-- patient_note 要溫暖易懂，像護理師在跟病患說話`;
+- appearance 描述實際外觀（顏色、形狀、刻字），不確定寫「請依實際藥物核對」
+- patient_note 溫暖易懂，像護理師在跟病患說話`;
 
     const raw2 = await callClaude([{ role: 'user', content: eduPrompt }]);
     const { edu } = JSON.parse(raw2);
-    renderCards(drugs, edu || []);
+    await renderCards(drugs, edu || []);
 
   } catch (err) {
     showError('分析失敗', err.message);
@@ -318,34 +643,37 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
   }
 }
 
-// ── 清除 ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// 清除 / Chips / 衛教卡片
+// ══════════════════════════════════════════════════════════════════
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('chipSection').style.display = 'none';
-  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.status-msg').forEach(e=>e.remove());
+  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box').forEach(e=>e.remove());
 }
 
-// ── chips ────────────────────────────────────────────────────────
 function renderChips(drugs) {
   if (!drugs.length) return;
   const sec = document.getElementById('chipSection');
   const list = document.getElementById('chipList');
   sec.style.display = 'block';
-  list.innerHTML = drugs.map((d,i) => `
-    <div class="chip" onclick="scrollToCard('card-${i}')">
-      <div class="cname">💊 ${d.brand_name||d.chinese_name||d.generic_name}</div>
+  list.innerHTML = drugs.map((d,i) => {
+    const db = matchDrug(d);
+    return `<div class="chip" onclick="scrollToCard('card-${i}')">
+      <div class="cname">${db?.alias || d.brand_name || d.chinese_name || d.generic_name}</div>
       <div class="cmeta">${d.generic_name||''} · ${d.dose||''} · ${d.frequency||''}</div>
       ${d.days ? `<span class="cbadge">${d.days}天</span>` : ''}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function scrollToCard(id) {
   document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// ── 衛教卡片 ─────────────────────────────────────────────────────
-function renderCards(drugs, edu) {
+async function renderCards(drugs, edu) {
   const panel = document.getElementById('mainPanel');
+  const photos = await getAllPhotos();
   const now = new Date();
   const date = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
 
@@ -360,19 +688,25 @@ function renderCards(drugs, edu) {
 
   drugs.forEach((d, i) => {
     const e = edu.find(x => x.index === i) || {};
+    const db = matchDrug(d);
+    const photo = db ? photos[db.code] : null;
+    const pillHTML = photo
+      ? `<img src="${photo}" alt="${db?.alias||''}">`
+      : '💊';
     const schedHTML = (e.schedule_times || [d.timing || d.frequency || '依醫囑'])
       .map(t => `<span class="sched-pill">${t}</span>`).join('');
     const warnHTML = (e.warnings || ['請依醫師指示服藥','勿自行停藥','如有不適請回診'])
       .map(w => `<li>${w}</li>`).join('');
     const sideHTML = (e.side_effects || []).map(s => `<span class="side-tag">${s}</span>`).join('');
+    const displayName = db ? `${db.alias} (${db.chn})` : (d.brand_name||d.chinese_name||'');
 
     panel.insertAdjacentHTML('beforeend', `
       <div class="drug-card" id="card-${i}">
         <div class="card-head">
-          <div class="pill-icon">💊</div>
+          <div class="pill-icon">${pillHTML}</div>
           <div class="card-head-info">
-            <h3>${d.brand_name||d.chinese_name||''} ${d.dose||''}</h3>
-            <div class="sub">${d.generic_name||''} | ${d.chinese_name||''}</div>
+            <h3>${displayName} ${d.dose||''}</h3>
+            <div class="sub">${d.generic_name||''} | ${db?.eng||d.brand_name||''}</div>
             <div class="badges">
               ${d.frequency ? `<span class="badge">${d.frequency}</span>` : ''}
               ${d.days ? `<span class="badge">${d.days}天份</span>` : ''}
@@ -400,6 +734,7 @@ function renderCards(drugs, edu) {
           <div class="appear-tile">
             <div class="tile-label">藥物外觀</div>
             <div class="tile-val">${e.appearance || '請依實際藥物核對'}</div>
+            ${photo ? `<img class="appear-img" src="${photo}" alt="${db?.alias||''}">` : ''}
           </div>
 
           ${sideHTML ? `
@@ -422,24 +757,26 @@ function renderCards(drugs, edu) {
   });
 }
 
-// ── 展示模式 ─────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// 展示模式
+// ══════════════════════════════════════════════════════════════════
 function runDemo() {
   clearResults();
   const drugs = [
-    {brand_name:"Flupine 0.25mg",generic_name:"flupenthixol",chinese_name:"福安源",dose:"0.25mg",frequency:"每日一次",timing:"早上",days:"28",quantity:"28"},
-    {brand_name:"Mocalm 0.5/10mg",generic_name:"moclobemide / lorazepam",chinese_name:"永康",dose:"0.5/10mg",frequency:"每日一次",timing:"早上",days:"28",quantity:"28"},
-    {brand_name:"Alpraline 0.5mg",generic_name:"alprazolam",chinese_name:"安柏寧",dose:"0.5mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
-    {brand_name:"Valdoxan 25mg",generic_name:"agomelatine",chinese_name:"煩多閃",dose:"25mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
-    {brand_name:"Zolon 7.5mg",generic_name:"zopiclone",chinese_name:"樂比克",dose:"7.5mg",frequency:"每日一次",timing:"睡前",days:"28",quantity:"28"},
-    {brand_name:"Solaxin 200mg",generic_name:"chlorzoxazone",chinese_name:"舒肉筋",dose:"200mg",frequency:"需要時使用",timing:"需要時",days:"7",quantity:"7"}
+    {brand_name:"Flupine 0.25mg",generic_name:"Fludiazepam",chinese_name:"福安源錠",code:"FLU01",dose:"0.25mg",frequency:"每日一次",timing:"早上",days:"28"},
+    {brand_name:"Mocalm 0.5/10mg",generic_name:"Flupentixol/Melitracen",chinese_name:"永康緩錠",code:"MOC00",dose:"0.5/10mg",frequency:"每日一次",timing:"早上",days:"28"},
+    {brand_name:"Alpraline 0.5mg",generic_name:"Alprazolam",chinese_name:"安柏寧錠",code:"ALP01",dose:"0.5mg",frequency:"每日一次",timing:"睡前",days:"28"},
+    {brand_name:"Valdoxan 25mg",generic_name:"Agomelatine",chinese_name:"煩多悶錠",code:"VAL00",dose:"25mg",frequency:"每日一次",timing:"睡前",days:"28"},
+    {brand_name:"Zolon 7.5mg",generic_name:"Zopiclone",chinese_name:"樂比克錠",code:"ZOL01",dose:"7.5mg",frequency:"每日一次",timing:"睡前",days:"28"},
+    {brand_name:"Solaxin 200mg",generic_name:"Chlorzoxazone",chinese_name:"舒肌筋新錠",code:"SOL00",dose:"200mg",frequency:"需要時使用",timing:"需要時",days:"7"}
   ];
   const edu = [
     {index:0,purpose:"幫助穩定情緒、減輕焦慮與緊張感",schedule_times:["08:00 早餐後"],warnings:["服藥期間避免飲酒","初期可能有輕微嗜睡，開車請注意","不可自行突然停藥"],side_effects:["嗜睡","口乾","輕微頭暈","疲倦感"],appearance:"白色圓形小錠，一面有刻痕",patient_note:"這顆藥會幫助您白天的情緒更穩定，如果覺得太累可以跟醫師討論調整。"},
-    {index:1,purpose:"改善情緒低落、減輕憂鬱與焦慮症狀",schedule_times:["08:00 早餐後"],warnings:["避免與含酪胺食物（如起司、紅酒）同時大量食用","服藥期間避免飲酒","如出現異常興奮或躁動請回診"],side_effects:["頭暈","噁心","失眠","口乾"],appearance:"白色橢圓形膜衣錠",patient_note:"這顆藥幫助提升您的情緒，通常需要1-2週才會感受到完整效果，請耐心服用。"},
-    {index:2,purpose:"緩解焦慮、幫助放鬆與入睡",schedule_times:["22:00 睡前30分鐘"],warnings:["本藥可能產生依賴性，請遵照醫師處方劑量","服藥後請直接準備就寢，避免從事需注意力的活動","勿自行增加劑量或突然停藥"],side_effects:["嗜睡","頭暈","記憶力短暫下降","肌肉無力"],appearance:"白色圓形錠劑，中間有刻痕",patient_note:"這顆藥幫助您睡前放鬆，吃完就準備上床休息，不要再做其他事情喔。"},
+    {index:1,purpose:"改善情緒低落、減輕憂鬱與焦慮症狀",schedule_times:["08:00 早餐後"],warnings:["避免與含酪胺食物同時大量食用","服藥期間避免飲酒","如出現異常興奮或躁動請回診"],side_effects:["頭暈","噁心","失眠","口乾"],appearance:"白色橢圓形膜衣錠",patient_note:"這顆藥幫助提升您的情緒，通常需要1-2週才會感受到完整效果，請耐心服用。"},
+    {index:2,purpose:"緩解焦慮、幫助放鬆與入睡",schedule_times:["22:00 睡前30分鐘"],warnings:["本藥可能產生依賴性，請遵照醫師處方劑量","服藥後請直接準備就寢","勿自行增加劑量或突然停藥"],side_effects:["嗜睡","頭暈","記憶力短暫下降","肌肉無力"],appearance:"白色圓形錠劑，中間有刻痕",patient_note:"這顆藥幫助您睡前放鬆，吃完就準備上床休息，不要再做其他事情喔。"},
     {index:3,purpose:"改善憂鬱症狀、調節睡眠節律",schedule_times:["22:00 睡前"],warnings:["服藥期間需定期追蹤肝功能","避免飲酒","如出現皮膚或眼白變黃、深色尿液，請立即回診"],side_effects:["頭痛","噁心","頭暈","疲倦"],appearance:"橘黃色橢圓形膜衣錠，刻有數字",patient_note:"這顆藥除了改善心情，也能幫助您建立正常的睡眠規律，記得每天同一時間服用效果最好。"},
-    {index:4,purpose:"幫助入睡、改善睡眠品質",schedule_times:["22:00 睡前15-30分鐘"],warnings:["服藥後請立即就寢","本藥有依賴風險，請依醫師指示服用","不可與酒精併用"],side_effects:["口中金屬味","嗜睡","頭暈","口乾"],appearance:"白色至淡黃色圓形膜衣錠",patient_note:"吃了這顆藥就直接躺下睡覺，不要再滑手機了喔！如果覺得早上起來還有殘留的暈，可以告訴醫師。"},
-    {index:5,purpose:"緩解肌肉緊繃、痠痛不適",schedule_times:["需要時服用，每日最多3次"],warnings:["可能引起嗜睡，服藥後避免開車或操作機械","如有腸胃不適可隨餐服用","本藥為需要時使用，無需固定服用"],side_effects:["嗜睡","頭暈","腸胃不適","皮疹（罕見）"],appearance:"淡綠色圓形錠劑",patient_note:"肌肉痠痛的時候才吃就好，不用每天固定吃。吃了可能會有點想睡，這是正常的。"}
+    {index:4,purpose:"幫助入睡、改善睡眠品質",schedule_times:["22:00 睡前15-30分鐘"],warnings:["服藥後請立即就寢","本藥有依賴風險，請依醫師指示服用","不可與酒精併用"],side_effects:["口中金屬味","嗜睡","頭暈","口乾"],appearance:"白色至淡黃色圓形膜衣錠",patient_note:"吃了這顆藥就直接躺下睡覺，不要再滑手機了喔！"},
+    {index:5,purpose:"緩解肌肉緊繃、痠痛不適",schedule_times:["需要時服用，每日最多3次"],warnings:["可能引起嗜睡，服藥後避免開車或操作機械","如有腸胃不適可隨餐服用","本藥為需要時使用，無需固定服用"],side_effects:["嗜睡","頭暈","腸胃不適"],appearance:"淡綠色圓形錠劑",patient_note:"肌肉痠痛的時候才吃就好，不用每天固定吃。吃了可能會有點想睡，這是正常的。"}
   ];
   renderChips(drugs);
   renderCards(drugs, edu);
@@ -449,6 +786,9 @@ function showError(title, msg) {
   document.getElementById('mainPanel').insertAdjacentHTML('beforeend',
     `<div class="err-box"><strong>${title}</strong>${msg}</div>`);
 }
+
+// init DB
+openDB();
 </script>
 </body>
 </html>
