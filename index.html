@@ -117,22 +117,42 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .err-box{background:#fff0f0;border:1px solid #ffaaaa;border-radius:10px;padding:16px 18px;color:#9b0000;font-size:.85rem;line-height:1.6}
 .err-box strong{display:block;font-size:.95rem;margin-bottom:4px}
 
-/* SCHEDULE TABLE */
-.sched-table-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.sched-table-title{background:linear-gradient(135deg,#1a5276 0%,#2980b9 100%);color:#fff;padding:14px 20px;font-size:1rem;font-weight:700;font-family:'Noto Serif TC',serif}
-.sched-table{width:100%;border-collapse:collapse}
-.sched-table th{background:#eaf2f8;color:#1a5276;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:10px 8px;border-bottom:2px solid #d4e6f1;text-align:center;white-space:nowrap}
-.sched-table th.time-col{width:80px}
-.sched-table td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:center;vertical-align:middle}
-.sched-table tr:last-child td{border-bottom:none}
-.sched-table tr:hover{background:#f8fbfd}
-.sched-drug-name{font-size:.76rem;font-weight:600;color:var(--ink);margin-top:4px;line-height:1.3}
-.sched-drug-dose{font-size:.68rem;color:var(--muted)}
-.sched-cell{display:flex;flex-direction:column;align-items:center;gap:3px}
-.sched-cell-img{width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid var(--border)}
-.sched-cell-pill{width:40px;height:40px;border-radius:6px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
-.sched-empty{color:#ddd;font-size:1.2rem}
-.sched-note{padding:12px 20px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);line-height:1.6}
+/* SCHEDULE TIMELINE */
+.sched-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.sched-title{background:linear-gradient(135deg,#1a5276 0%,#2980b9 100%);color:#fff;padding:14px 20px;font-size:1rem;font-weight:700;font-family:'Noto Serif TC',serif}
+.sched-timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0}
+.sched-slot{border-right:1px solid var(--border);padding:0}
+.sched-slot:last-child{border-right:none}
+.sched-slot-header{padding:12px 14px;text-align:center;border-bottom:1px solid var(--border)}
+.sched-slot-icon{font-size:1.6rem;margin-bottom:4px}
+.sched-slot-label{font-size:.88rem;font-weight:700}
+.sched-slot-time{font-size:.7rem;opacity:.7;margin-top:2px}
+.slot-morning .sched-slot-header{background:linear-gradient(135deg,#fef9e7,#fdebd0);color:#b7950b}
+.slot-noon .sched-slot-header{background:linear-gradient(135deg,#fef5e7,#fae5d3);color:#ca6f1e}
+.slot-evening .sched-slot-header{background:linear-gradient(135deg,#f4ecf7,#ebdef0);color:#7d3c98}
+.slot-bedtime .sched-slot-header{background:linear-gradient(135deg,#eaf2f8,#d4e6f1);color:#1a5276}
+.sched-slot-drugs{padding:12px 10px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.sched-drug{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:8px 10px;transition:all .2s}
+.sched-drug:hover{box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.sched-drug-img{width:42px;height:42px;border-radius:6px;object-fit:cover;border:1px solid var(--border);flex-shrink:0}
+.sched-drug-pill{width:42px;height:42px;border-radius:6px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.sched-drug-info{flex:1;min-width:0}
+.sched-drug-name{font-size:.8rem;font-weight:600;color:var(--ink);line-height:1.3}
+.sched-drug-dose{font-size:.7rem;color:var(--muted);margin-top:1px}
+
+/* PRN SECTION */
+.prn-section{border-top:1px solid var(--border);padding:16px 20px}
+.prn-title{font-size:.82rem;font-weight:700;color:var(--warn);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.prn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.prn-card{display:flex;align-items:center;gap:10px;background:#fff8f0;border:1px solid #ffd5a8;border-radius:10px;padding:10px 14px}
+.prn-card-img{width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid #ffd5a8;flex-shrink:0}
+.prn-card-pill{width:44px;height:44px;border-radius:6px;background:#ffe5c8;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.prn-card-info{flex:1}
+.prn-card-name{font-size:.82rem;font-weight:700;color:#7a2900}
+.prn-card-dose{font-size:.7rem;color:var(--muted);margin-top:1px}
+.prn-card-trigger{font-size:.74rem;color:#bf4000;margin-top:4px;font-style:italic}
+
+.sched-note{padding:12px 20px;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);line-height:1.6}
 
 .upload-area.drag{border-color:var(--teal);background:#c8ecec}
 
@@ -196,7 +216,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
   .layout{display:block}
   .main{padding:0}
   .drug-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px}
-  .sched-table-wrap{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
+  .sched-wrap{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
   body{background:#fff}
 }
 @media(max-width:768px){
@@ -755,7 +775,7 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('chipSection').style.display = 'none';
-  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-table-wrap').forEach(e=>e.remove());
+  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap').forEach(e=>e.remove());
 }
 
 function renderChips(drugs) {
@@ -781,12 +801,16 @@ function scrollToCard(id) {
 // 服藥時間表
 // ══════════════════════════════════════════════════════════════════
 const TIME_SLOTS = [
-  {key:'morning',  label:'早上',   time:'07:00-08:00', keywords:['早','morning','早餐','起床','07','08','am']},
-  {key:'noon',     label:'中午',   time:'12:00-13:00', keywords:['中午','午','noon','lunch','12','13']},
-  {key:'evening',  label:'晚上',   time:'18:00-19:00', keywords:['晚','evening','dinner','晚餐','18','19']},
-  {key:'bedtime',  label:'睡前',   time:'21:00-22:00', keywords:['睡前','bedtime','hs','22','21','night']},
-  {key:'prn',      label:'需要時', time:'—',           keywords:['需要時','prn','必要','痛','不適']}
+  {key:'morning', label:'早上',  time:'07:00 – 08:00', icon:'🌅', cls:'slot-morning',
+   keywords:['早','morning','早餐','起床','07','08','am']},
+  {key:'noon',    label:'中午',  time:'12:00 – 13:00', icon:'☀️', cls:'slot-noon',
+   keywords:['中午','午','noon','lunch','12','13']},
+  {key:'evening', label:'晚上',  time:'18:00 – 19:00', icon:'🌇', cls:'slot-evening',
+   keywords:['晚','evening','dinner','晚餐','18','19']},
+  {key:'bedtime', label:'睡前',  time:'21:00 – 22:00', icon:'🌙', cls:'slot-bedtime',
+   keywords:['睡前','bedtime','hs','22','21','night']}
 ];
+const PRN_KEYWORDS = ['需要時','prn','必要','痛','不適','as needed'];
 
 function classifyTiming(drug, eduItem) {
   const slots = new Set();
@@ -796,7 +820,9 @@ function classifyTiming(drug, eduItem) {
   ].filter(Boolean).map(s => s.toLowerCase());
   const allText = texts.join(' ');
 
-  // check each time slot
+  // check PRN first
+  if (PRN_KEYWORDS.some(k => allText.includes(k))) return { slots: new Set(), isPRN: true };
+
   for (const slot of TIME_SLOTS) {
     for (const kw of slot.keywords) {
       if (allText.includes(kw)) { slots.add(slot.key); break; }
@@ -812,64 +838,84 @@ function classifyTiming(drug, eduItem) {
     else { slots.add('morning'); }
   }
 
-  return slots;
+  return { slots, isPRN: false };
 }
 
 function renderScheduleTable(drugs, edu, photos) {
-  // build schedule data
-  const rows = drugs.map((d, i) => {
+  const scheduled = []; // {name, dose, photo, slots}
+  const prnDrugs = [];  // {name, dose, photo, purpose}
+
+  drugs.forEach((d, i) => {
     const e = edu.find(x => x.index === i) || {};
     const db = matchDrug(d);
     const photo = db ? photos[db.code] : null;
-    const slots = classifyTiming(d, e);
-    return {
-      name: db?.alias || d.brand_name || d.chinese_name || d.generic_name,
-      dose: d.dose || '',
-      photo, slots
-    };
+    const name = db?.alias || d.brand_name || d.chinese_name || d.generic_name;
+    const dose = d.dose || '';
+    const { slots, isPRN } = classifyTiming(d, e);
+
+    if (isPRN) {
+      prnDrugs.push({ name, dose, photo, purpose: e.purpose || '需要時使用' });
+    } else {
+      scheduled.push({ name, dose, photo, slots });
+    }
   });
 
-  // group by time slot for column-based view
-  // But actually, row = drug, columns = time slots is clearer
+  // find which time slots are actually used
   const activeSlots = TIME_SLOTS.filter(s =>
-    rows.some(r => r.slots.has(s.key))
+    scheduled.some(r => r.slots.has(s.key))
   );
 
-  let html = `<div class="sched-table-wrap">
-    <div class="sched-table-title">每日服藥時間表</div>
-    <table class="sched-table">
-      <thead><tr>
-        <th style="text-align:left;padding-left:16px">藥物</th>
-        ${activeSlots.map(s => `<th class="time-col">${s.label}<br><span style="font-weight:400;font-size:.65rem;opacity:.7">${s.time}</span></th>`).join('')}
-      </tr></thead>
-      <tbody>`;
+  let html = `<div class="sched-wrap">
+    <div class="sched-title">每日服藥時間表</div>
+    <div class="sched-timeline">`;
 
-  rows.forEach(r => {
-    html += `<tr>
-      <td style="text-align:left;padding-left:16px">
-        <div style="display:flex;align-items:center;gap:8px">
-          ${r.photo
-            ? `<img src="${r.photo}" style="width:36px;height:36px;border-radius:6px;object-fit:cover;border:1px solid var(--border)">`
-            : `<div style="width:36px;height:36px;border-radius:6px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:1rem">💊</div>`}
-          <div>
-            <div class="sched-drug-name">${r.name}</div>
-            <div class="sched-drug-dose">${r.dose}</div>
-          </div>
+  activeSlots.forEach(slot => {
+    const slotDrugs = scheduled.filter(r => r.slots.has(slot.key));
+    html += `<div class="sched-slot ${slot.cls}">
+      <div class="sched-slot-header">
+        <div class="sched-slot-icon">${slot.icon}</div>
+        <div class="sched-slot-label">${slot.label}</div>
+        <div class="sched-slot-time">${slot.time}</div>
+      </div>
+      <div class="sched-slot-drugs">`;
+
+    slotDrugs.forEach(d => {
+      html += `<div class="sched-drug">
+        ${d.photo
+          ? `<img class="sched-drug-img" src="${d.photo}" alt="${d.name}">`
+          : `<div class="sched-drug-pill">💊</div>`}
+        <div class="sched-drug-info">
+          <div class="sched-drug-name">${d.name}</div>
+          <div class="sched-drug-dose">${d.dose}</div>
         </div>
-      </td>
-      ${activeSlots.map(s => `<td>${r.slots.has(s.key)
-        ? (r.photo
-          ? `<div class="sched-cell"><img class="sched-cell-img" src="${r.photo}"><span class="sched-drug-dose">${r.dose}</span></div>`
-          : `<div class="sched-cell"><div class="sched-cell-pill">💊</div><span class="sched-drug-dose">${r.dose}</span></div>`)
-        : '<span class="sched-empty">—</span>'
-      }</td>`).join('')}
-    </tr>`;
+      </div>`;
+    });
+
+    html += `</div></div>`;
   });
 
-  html += `</tbody></table>
-    <div class="sched-note">* 實際服藥時間請依醫師指示為準。需要時使用的藥物不需每日固定服用。</div>
-  </div>`;
+  html += `</div>`;
 
+  // PRN section
+  if (prnDrugs.length) {
+    html += `<div class="prn-section">
+      <div class="prn-title">⚡ 需要時使用（不需每日固定服用）</div>
+      <div class="prn-grid">`;
+    prnDrugs.forEach(d => {
+      html += `<div class="prn-card">
+        ${d.photo
+          ? `<img class="prn-card-img" src="${d.photo}" alt="${d.name}">`
+          : `<div class="prn-card-pill">💊</div>`}
+        <div class="prn-card-info">
+          <div class="prn-card-name">${d.name} ${d.dose}</div>
+          <div class="prn-card-trigger">${d.purpose}</div>
+        </div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `<div class="sched-note">* 實際服藥時間請依醫師指示為準</div></div>`;
   return html;
 }
 
