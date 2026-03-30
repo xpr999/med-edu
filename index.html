@@ -154,6 +154,68 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 
 .sched-note{padding:12px 20px;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);line-height:1.6}
 
+/* INTERACTION WARNINGS */
+.interact-wrap{background:#fff;border:2px solid #e74c3c;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(231,76,60,.15)}
+.interact-title{background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;padding:12px 20px;font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.interact-list{padding:14px 20px;display:flex;flex-direction:column;gap:10px}
+.interact-item{background:#fef5f5;border:1px solid #f5c6cb;border-radius:10px;padding:12px 16px}
+.interact-drugs{font-size:.85rem;font-weight:700;color:#c0392b;margin-bottom:4px}
+.interact-desc{font-size:.8rem;color:#5a1a1a;line-height:1.6}
+.interact-level{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:6px}
+.interact-level.high{background:#e74c3c;color:#fff}
+.interact-level.mid{background:#f39c12;color:#fff}
+.interact-level.low{background:#f1c40f;color:#333}
+
+/* MODE TOGGLES */
+.mode-bar{display:flex;gap:8px;margin-bottom:4px}
+.mode-toggle{flex:1;padding:8px;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;font-family:inherit;color:var(--muted);transition:all .2s}
+.mode-toggle:hover{border-color:var(--teal);color:var(--teal)}
+.mode-toggle.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* ELDER MODE */
+body.elder .drug-card .card-head-info h3{font-size:1.4rem}
+body.elder .drug-card .tile-val{font-size:1.1rem;font-weight:600}
+body.elder .drug-card .warn-tile ul li{font-size:1.05rem}
+body.elder .drug-card .note-tile p{font-size:1.05rem}
+body.elder .drug-card .sched-pill{font-size:1rem;padding:7px 18px}
+body.elder .drug-card .side-tag{font-size:.9rem;padding:4px 12px}
+body.elder .drug-card .tile-label{font-size:.8rem}
+body.elder .drug-card .badge{font-size:.8rem;padding:3px 10px}
+body.elder .sched-wrap .sched-slot-label{font-size:1.1rem}
+body.elder .sched-wrap .sched-drug-name{font-size:1rem}
+body.elder .sched-wrap .sched-drug-dose{font-size:.88rem}
+body.elder .prn-card-name{font-size:1rem}
+body.elder .interact-drugs{font-size:1.05rem}
+body.elder .interact-desc{font-size:1rem}
+
+/* SIMPLE MODE (fridge card) */
+.simple-card{background:#fff;border:2px solid var(--teal);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);page-break-inside:avoid}
+.simple-card-title{background:var(--teal);color:#fff;padding:14px 20px;font-size:1.1rem;font-weight:700;text-align:center;font-family:'Noto Serif TC',serif}
+.simple-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0;border-top:1px solid var(--border)}
+.simple-slot{border-right:1px solid var(--border);text-align:center}
+.simple-slot:last-child{border-right:none}
+.simple-slot-hd{padding:10px 8px;font-weight:700;font-size:1rem;border-bottom:1px solid var(--border)}
+.slot-morning .simple-slot-hd{background:#fef9e7;color:#b7950b}
+.slot-noon .simple-slot-hd{background:#fef5e7;color:#ca6f1e}
+.slot-evening .simple-slot-hd{background:#f4ecf7;color:#7d3c98}
+.slot-bedtime .simple-slot-hd{background:#eaf2f8;color:#1a5276}
+.simple-slot-drugs{padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.simple-pill{text-align:center}
+.simple-pill img{width:56px;height:56px;border-radius:8px;object-fit:cover;border:1px solid var(--border)}
+.simple-pill-placeholder{width:56px;height:56px;border-radius:8px;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto}
+.simple-pill-name{font-size:.82rem;font-weight:600;margin-top:4px;color:var(--ink)}
+.simple-pill-dose{font-size:.72rem;color:var(--muted)}
+.simple-prn{border-top:2px solid #ffd5a8;padding:14px 20px;background:#fff8f0}
+.simple-prn-title{font-weight:700;color:var(--warn);font-size:.9rem;margin-bottom:8px}
+.simple-prn-items{display:flex;gap:16px;flex-wrap:wrap}
+.simple-prn-item{display:flex;align-items:center;gap:8px}
+.simple-prn-item img{width:40px;height:40px;border-radius:6px;object-fit:cover}
+.simple-note{text-align:center;padding:10px;font-size:.76rem;color:var(--muted);border-top:1px solid var(--border)}
+
+body.elder .simple-pill-name{font-size:1rem}
+body.elder .simple-pill-dose{font-size:.88rem}
+body.elder .simple-slot-hd{font-size:1.2rem}
+
 .upload-area.drag{border-color:var(--teal);background:#c8ecec}
 
 /* ===== DRUG MANAGEMENT PAGE ===== */
@@ -216,7 +278,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
   .layout{display:block}
   .main{padding:0}
   .drug-card{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px}
-  .sched-wrap{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
+  .sched-wrap,.interact-wrap,.simple-card{box-shadow:none!important;border:1px solid #bbb!important;margin-bottom:20px;break-inside:avoid}
+  .mode-bar{display:none!important}
   body{background:#fff}
 }
 @media(max-width:768px){
@@ -265,6 +328,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
       <div>
         <div class="label-sm">補充說明（選填）</div>
         <textarea class="extra-input" id="extraInput" placeholder="例：早晚各一、飯後服用、特殊交代…"></textarea>
+      </div>
+      <div class="mode-bar">
+        <button class="mode-toggle" id="btnElder" onclick="toggleElder()">長輩模式</button>
+        <button class="mode-toggle" id="btnSimple" onclick="toggleSimple()">簡單模式</button>
       </div>
       <button class="btn-analyse" id="analyseBtn" disabled onclick="analyse()">
         <div class="spinner"></div>
@@ -742,23 +809,24 @@ async function analyse() {
     renderChips(drugs);
     btn.querySelector('.btn-text').textContent = '生成衛教內容中…';
 
-    const eduPrompt = `你是一位資深精神科護理師，使用繁體中文。請為以下藥物生成衛教說明，以純JSON格式回傳。
+    const eduPrompt = `你是一位資深精神科護理師和臨床藥師，使用繁體中文。請為以下藥物生成衛教說明和交互作用檢查，以純JSON格式回傳。
 
 藥物列表：
 ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose||''} ${d.frequency||''} ${d.timing||''}`).join('\n')}
 
 格式：
-{"edu":[{"index":0,"purpose":"此藥用途一句話口語化","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"patient_note":"給病患的溫馨叮嚀1-2句"}]}
+{"edu":[{"index":0,"purpose":"此藥用途一句話口語化","schedule_times":["07:00 早餐後","22:00 睡前"],"warnings":["警語1","警語2","警語3"],"side_effects":["副作用1","副作用2"],"patient_note":"給病患的溫馨叮嚀1-2句"}],"interactions":[{"drug_a":"藥物A名稱","drug_b":"藥物B名稱","level":"high/mid/low","description":"交互作用說明和建議"}]}
 
 要求：
 - schedule_times 根據 frequency 和 timing 推算時間點
 - warnings 給出最重要的3條注意事項
 - side_effects 列出最常見的3-4個
-- patient_note 溫暖易懂，像護理師在跟病患說話`;
+- patient_note 溫暖易懂，像護理師在跟病患說話
+- interactions 檢查所有藥物之間的交互作用，只列出臨床上重要的，level: high=嚴重禁忌, mid=需注意, low=輕微。如果沒有交互作用就回傳空陣列`;
 
     const raw2 = await callClaude([{ role: 'user', content: eduPrompt }]);
-    const { edu } = JSON.parse(raw2);
-    await renderCards(drugs, edu || []);
+    const parsed2 = JSON.parse(raw2);
+    await renderCards(drugs, parsed2.edu || [], parsed2.interactions || []);
 
   } catch (err) {
     showError('分析失敗', err.message);
@@ -775,7 +843,7 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('chipSection').style.display = 'none';
-  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap').forEach(e=>e.remove());
+  document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap,.interact-wrap,.simple-card').forEach(e=>e.remove());
 }
 
 function renderChips(drugs) {
@@ -919,7 +987,8 @@ function renderScheduleTable(drugs, edu, photos) {
   return html;
 }
 
-async function renderCards(drugs, edu) {
+async function renderCards(drugs, edu, interactions) {
+  interactions = interactions || [];
   const panel = document.getElementById('mainPanel');
   const photos = await getAllPhotos();
   const now = new Date();
@@ -934,8 +1003,31 @@ async function renderCards(drugs, edu) {
       <button class="btn-print" onclick="window.print()">列印衛教單</button>
     </div>`);
 
+  // 交互作用警示
+  if (interactions.length) {
+    const levelLabel = {high:'嚴重',mid:'注意',low:'輕微'};
+    panel.insertAdjacentHTML('beforeend', `
+      <div class="interact-wrap">
+        <div class="interact-title">⚠ 藥物交互作用提醒</div>
+        <div class="interact-list">
+          ${interactions.map(x => `<div class="interact-item">
+            <div class="interact-drugs">
+              <span class="interact-level ${x.level}">${levelLabel[x.level]||'注意'}</span>
+              ${x.drug_a} ✕ ${x.drug_b}
+            </div>
+            <div class="interact-desc">${x.description}</div>
+          </div>`).join('')}
+        </div>
+      </div>`);
+  }
+
   // 服藥時間表
   panel.insertAdjacentHTML('beforeend', renderScheduleTable(drugs, edu, photos));
+
+  // 簡單模式（冰箱貼）
+  if (simpleMode) {
+    panel.insertAdjacentHTML('beforeend', renderSimpleCard(drugs, edu, photos));
+  }
 
   drugs.forEach((d, i) => {
     const e = edu.find(x => x.index === i) || {};
@@ -1023,8 +1115,83 @@ function runDemo() {
     {index:4,purpose:"幫助入睡、改善睡眠品質",schedule_times:["22:00 睡前15-30分鐘"],warnings:["服藥後請立即就寢","本藥有依賴風險，請依醫師指示服用","不可與酒精併用"],side_effects:["口中金屬味","嗜睡","頭暈","口乾"],appearance:"白色至淡黃色圓形膜衣錠",patient_note:"吃了這顆藥就直接躺下睡覺，不要再滑手機了喔！"},
     {index:5,purpose:"緩解肌肉緊繃、痠痛不適",schedule_times:["需要時服用，每日最多3次"],warnings:["可能引起嗜睡，服藥後避免開車或操作機械","如有腸胃不適可隨餐服用","本藥為需要時使用，無需固定服用"],side_effects:["嗜睡","頭暈","腸胃不適"],appearance:"淡綠色圓形錠劑",patient_note:"肌肉痠痛的時候才吃就好，不用每天固定吃。吃了可能會有點想睡，這是正常的。"}
   ];
+  const interactions = [
+    {drug_a:"Valdoxan (煩多悶)",drug_b:"Flupine (福安源)",level:"low",description:"Agomelatine 與 Fludiazepam 併用可能增加鎮靜效果，睡前服用時注意隔日嗜睡情形。"},
+    {drug_a:"Alpraline (安柏寧)",drug_b:"Zolon (樂比克)",level:"mid",description:"兩者皆為中樞神經抑制劑，併用會增強鎮靜和呼吸抑制風險。請確實依照醫師指示劑量服用，切勿自行增量。"}
+  ];
   renderChips(drugs);
-  renderCards(drugs, edu);
+  renderCards(drugs, edu, interactions);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 長輩模式 / 簡單模式
+// ══════════════════════════════════════════════════════════════════
+let elderMode = false, simpleMode = false;
+
+function toggleElder() {
+  elderMode = !elderMode;
+  document.body.classList.toggle('elder', elderMode);
+  document.getElementById('btnElder').classList.toggle('active', elderMode);
+}
+
+function toggleSimple() {
+  simpleMode = !simpleMode;
+  document.getElementById('btnSimple').classList.toggle('active', simpleMode);
+}
+
+function renderSimpleCard(drugs, edu, photos) {
+  const scheduled = [];
+  const prnDrugs = [];
+
+  drugs.forEach((d, i) => {
+    const e = edu.find(x => x.index === i) || {};
+    const db = matchDrug(d);
+    const photo = db ? photos[db.code] : null;
+    const name = db?.alias || d.brand_name || d.chinese_name || d.generic_name;
+    const dose = d.dose || '';
+    const { slots, isPRN } = classifyTiming(d, e);
+    if (isPRN) prnDrugs.push({ name, dose, photo });
+    else scheduled.push({ name, dose, photo, slots });
+  });
+
+  const activeSlots = TIME_SLOTS.filter(s => scheduled.some(r => r.slots.has(s.key)));
+
+  let html = `<div class="simple-card">
+    <div class="simple-card-title">我的服藥小卡</div>
+    <div class="simple-grid">`;
+
+  activeSlots.forEach(slot => {
+    const slotDrugs = scheduled.filter(r => r.slots.has(slot.key));
+    html += `<div class="simple-slot ${slot.cls}">
+      <div class="simple-slot-hd">${slot.icon} ${slot.label}</div>
+      <div class="simple-slot-drugs">`;
+    slotDrugs.forEach(d => {
+      html += `<div class="simple-pill">
+        ${d.photo ? `<img src="${d.photo}" alt="${d.name}">` : `<div class="simple-pill-placeholder">💊</div>`}
+        <div class="simple-pill-name">${d.name}</div>
+        <div class="simple-pill-dose">${d.dose}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  html += `</div>`;
+
+  if (prnDrugs.length) {
+    html += `<div class="simple-prn">
+      <div class="simple-prn-title">⚡ 需要時才吃</div>
+      <div class="simple-prn-items">`;
+    prnDrugs.forEach(d => {
+      html += `<div class="simple-prn-item">
+        ${d.photo ? `<img src="${d.photo}" alt="${d.name}">` : '💊'}
+        <span style="font-weight:600;font-size:.85rem">${d.name} ${d.dose}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `<div class="simple-note">剪下來貼在冰箱上，每天對照服藥</div></div>`;
+  return html;
 }
 
 // ══════════════════════════════════════════════════════════════════
