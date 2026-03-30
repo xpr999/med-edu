@@ -153,6 +153,30 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .drug-item .di-eng{font-size:.76rem;color:var(--teal);margin-top:2px}
 .drug-item .di-generic{font-size:.72rem;color:var(--muted);margin-top:2px}
 .drug-item .di-code{position:absolute;top:14px;right:14px;background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:.68rem;color:var(--muted);font-weight:600}
+.drug-item .di-actions{display:flex;gap:6px;margin-top:8px}
+.drug-item .di-actions button{background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;font-size:.7rem;cursor:pointer;color:var(--muted);font-family:inherit;transition:all .2s}
+.drug-item .di-actions button:hover{border-color:var(--warn);color:var(--warn)}
+.drug-item.custom-drug{border-left:3px solid var(--purple)}
+
+/* ADD DRUG FORM */
+.add-drug-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:.85rem;cursor:pointer;font-family:inherit;font-weight:600;transition:all .2s}
+.add-drug-btn:hover{background:#0a6060}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;padding:28px;width:90%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.modal h3{font-family:'Noto Serif TC',serif;font-size:1.1rem;color:var(--teal);margin-bottom:18px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.modal-field input,.modal-field select{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:.85rem;font-family:inherit;color:var(--ink);transition:border-color .2s}
+.modal-field input:focus,.modal-field select:focus{outline:none;border-color:var(--teal)}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.modal-actions button{border:none;border-radius:8px;padding:9px 20px;font-size:.85rem;cursor:pointer;font-family:inherit;font-weight:600;transition:all .2s}
+.btn-cancel{background:#f0f0f0;color:var(--muted)}
+.btn-cancel:hover{background:#e0e0e0}
+.btn-save{background:var(--teal);color:#fff}
+.btn-save:hover{background:#0a6060}
 
 /* PRINT */
 @media print{
@@ -235,11 +259,60 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 <div class="page" id="pageMgmt">
   <div class="mgmt-container">
     <div class="mgmt-header">
-      <h2>藥物管理</h2>
-      <div class="mgmt-stats" id="mgmtStats"></div>
+      <div>
+        <h2>藥物管理</h2>
+        <div class="mgmt-stats" id="mgmtStats"></div>
+      </div>
+      <button class="add-drug-btn" onclick="openAddDrug()">+ 新增藥物</button>
     </div>
     <div class="cat-tabs" id="catTabs"></div>
     <div class="drug-grid" id="drugGrid"></div>
+  </div>
+</div>
+
+<!-- 新增/編輯藥物 Modal -->
+<div class="modal-overlay" id="drugModal">
+  <div class="modal">
+    <h3 id="modalTitle">新增藥物</h3>
+    <input type="hidden" id="editCode">
+    <div class="modal-row">
+      <div class="modal-field">
+        <label>慣用名 *</label>
+        <input id="fAlias" placeholder="例：Stilnox">
+      </div>
+      <div class="modal-field">
+        <label>代碼 *</label>
+        <input id="fCode" placeholder="例：STI00">
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>英文商品名</label>
+      <input id="fEng" placeholder="例：Stilnox 10mg">
+    </div>
+    <div class="modal-field">
+      <label>中文商品名</label>
+      <input id="fChn" placeholder="例：使蒂諾斯錠">
+    </div>
+    <div class="modal-field">
+      <label>學名</label>
+      <input id="fGeneric" placeholder="例：Zolpidem">
+    </div>
+    <div class="modal-field">
+      <label>分類</label>
+      <select id="fCat">
+        <option>精神科用藥</option>
+        <option>專注力藥物</option>
+        <option>安眠鎮定藥</option>
+        <option>輔助藥品</option>
+        <option>自費品項</option>
+        <option>藥水</option>
+        <option>其他</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveDrug()">儲存</button>
+    </div>
   </div>
 </div>
 
@@ -329,7 +402,22 @@ const DRUG_DB = [
   {cat:"藥水",alias:"Risperdal 液",code:"RIS00",eng:"Risperdal Sol'n 30mL",chn:"理思必妥液",generic:"Risperidone (1mg/mL)"}
 ];
 
-const CATEGORIES = [...new Set(DRUG_DB.map(d=>d.cat))];
+// ══════════════════════════════════════════════════════════════════
+// 合併內建 + 自訂藥物
+// ══════════════════════════════════════════════════════════════════
+function getCustomDrugs() {
+  try { return JSON.parse(localStorage.getItem('custom_drugs') || '[]'); }
+  catch { return []; }
+}
+function saveCustomDrugs(list) {
+  localStorage.setItem('custom_drugs', JSON.stringify(list));
+}
+function getAllDrugs() {
+  return [...DRUG_DB, ...getCustomDrugs()];
+}
+function getCategories() {
+  return [...new Set(getAllDrugs().map(d=>d.cat))];
+}
 
 // ══════════════════════════════════════════════════════════════════
 // IndexedDB 管理藥物照片
@@ -412,26 +500,28 @@ function switchPage(page) {
 let currentCat = '全部';
 
 async function renderMgmt() {
+  const drugs = getAllDrugs();
   const photos = await getAllPhotos();
   const photoCount = Object.keys(photos).length;
+  const customCount = getCustomDrugs().length;
   document.getElementById('mgmtStats').textContent =
-    `共 ${DRUG_DB.length} 種藥物，已上傳 ${photoCount} 張照片`;
+    `共 ${drugs.length} 種藥物（自訂 ${customCount}），已上傳 ${photoCount} 張照片`;
 
-  // category tabs
   const tabsEl = document.getElementById('catTabs');
-  const allCats = ['全部', ...CATEGORIES];
+  const allCats = ['全部', ...getCategories()];
   tabsEl.innerHTML = allCats.map(c => {
-    const cnt = c === '全部' ? DRUG_DB.length : DRUG_DB.filter(d=>d.cat===c).length;
+    const cnt = c === '全部' ? drugs.length : drugs.filter(d=>d.cat===c).length;
     return `<div class="cat-tab${c===currentCat?' active':''}" onclick="filterCat('${c}')">
       ${c}<span class="cat-count">${cnt}</span></div>`;
   }).join('');
 
-  // drug grid
   const grid = document.getElementById('drugGrid');
-  const filtered = currentCat === '全部' ? DRUG_DB : DRUG_DB.filter(d=>d.cat===currentCat);
+  const filtered = currentCat === '全部' ? drugs : drugs.filter(d=>d.cat===currentCat);
+  const customCodes = new Set(getCustomDrugs().map(d=>d.code));
   grid.innerHTML = filtered.map(d => {
     const photo = photos[d.code];
-    return `<div class="drug-item${photo?' has-photo':''}">
+    const isCustom = customCodes.has(d.code);
+    return `<div class="drug-item${photo?' has-photo':''}${isCustom?' custom-drug':''}">
       <span class="di-code">${d.code}</span>
       <div class="di-photo">
         ${photo ? `<img src="${photo}" alt="${d.alias}">` : `<div class="photo-placeholder">點擊上傳照片</div>`}
@@ -441,6 +531,10 @@ async function renderMgmt() {
       <div class="di-name">${d.alias}</div>
       <div class="di-eng">${d.eng}</div>
       <div class="di-generic">${d.generic}</div>
+      ${isCustom ? `<div class="di-actions">
+        <button onclick="openEditDrug('${d.code}')">編輯</button>
+        <button onclick="deleteDrug('${d.code}')">刪除</button>
+      </div>` : ''}
     </div>`;
   }).join('');
 }
@@ -559,7 +653,7 @@ function matchDrug(d) {
   ].filter(Boolean).map(s => s.toLowerCase().trim());
 
   let best = null, bestScore = 0;
-  for (const db of DRUG_DB) {
+  for (const db of getAllDrugs()) {
     const targets = [db.alias, db.code, db.eng, db.chn, db.generic]
       .map(s => s.toLowerCase());
     let score = 0;
@@ -586,7 +680,7 @@ async function analyse() {
   clearResults();
 
   const extra = document.getElementById('extraInput').value;
-  const codeList = DRUG_DB.map(d => `${d.code}=${d.eng}(${d.chn})`).join(', ');
+  const codeList = getAllDrugs().map(d => `${d.code}=${d.eng}(${d.chn})`).join(', ');
 
   try {
     const recognizePrompt = `你是一位精神科藥物辨識AI。這是診所系統的處方截圖（通常是表格）。
@@ -781,6 +875,88 @@ function runDemo() {
   renderChips(drugs);
   renderCards(drugs, edu);
 }
+
+// ══════════════════════════════════════════════════════════════════
+// 新增 / 編輯 / 刪除藥物
+// ══════════════════════════════════════════════════════════════════
+function openAddDrug() {
+  document.getElementById('modalTitle').textContent = '新增藥物';
+  document.getElementById('editCode').value = '';
+  document.getElementById('fAlias').value = '';
+  document.getElementById('fCode').value = '';
+  document.getElementById('fEng').value = '';
+  document.getElementById('fChn').value = '';
+  document.getElementById('fGeneric').value = '';
+  document.getElementById('fCat').value = '精神科用藥';
+  document.getElementById('drugModal').classList.add('show');
+}
+
+function openEditDrug(code) {
+  const drug = getCustomDrugs().find(d => d.code === code);
+  if (!drug) return;
+  document.getElementById('modalTitle').textContent = '編輯藥物';
+  document.getElementById('editCode').value = code;
+  document.getElementById('fAlias').value = drug.alias;
+  document.getElementById('fCode').value = drug.code;
+  document.getElementById('fEng').value = drug.eng;
+  document.getElementById('fChn').value = drug.chn;
+  document.getElementById('fGeneric').value = drug.generic;
+  document.getElementById('fCat').value = drug.cat;
+  document.getElementById('drugModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('drugModal').classList.remove('show');
+}
+
+function saveDrug() {
+  const alias = document.getElementById('fAlias').value.trim();
+  const code = document.getElementById('fCode').value.trim();
+  if (!alias || !code) { alert('慣用名和代碼為必填'); return; }
+
+  const drug = {
+    cat: document.getElementById('fCat').value,
+    alias,
+    code,
+    eng: document.getElementById('fEng').value.trim() || alias,
+    chn: document.getElementById('fChn').value.trim() || alias,
+    generic: document.getElementById('fGeneric').value.trim() || ''
+  };
+
+  const editCode = document.getElementById('editCode').value;
+  const customs = getCustomDrugs();
+
+  // check duplicate code
+  const allExisting = [...DRUG_DB, ...customs];
+  const dup = allExisting.find(d => d.code === code && d.code !== editCode);
+  if (dup) { alert(`代碼 "${code}" 已存在（${dup.alias}）`); return; }
+
+  if (editCode) {
+    // editing
+    const idx = customs.findIndex(d => d.code === editCode);
+    if (idx >= 0) customs[idx] = drug;
+  } else {
+    // adding
+    customs.push(drug);
+  }
+
+  saveCustomDrugs(customs);
+  closeModal();
+  renderMgmt();
+}
+
+async function deleteDrug(code) {
+  if (!confirm('確定要刪除這個藥物嗎？')) return;
+  const customs = getCustomDrugs().filter(d => d.code !== code);
+  saveCustomDrugs(customs);
+  await deletePhoto(code);
+  renderMgmt();
+}
+
+// close modal on overlay click
+document.getElementById('drugModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
 
 function showError(title, msg) {
   document.getElementById('mainPanel').insertAdjacentHTML('beforeend',
