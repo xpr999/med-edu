@@ -46,6 +46,20 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .btn-screenshot{width:100%;padding:14px;background:linear-gradient(135deg,#2980b9,#1a5276);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all .2s;box-shadow:0 2px 8px rgba(26,82,118,.3)}
 .btn-screenshot:hover{background:linear-gradient(135deg,#1a6da0,#14405e);box-shadow:0 4px 14px rgba(26,82,118,.4);transform:translateY(-1px)}
 
+/* CROP OVERLAY */
+.crop-overlay{display:none;position:fixed;inset:0;z-index:200;background:#000;cursor:crosshair;user-select:none}
+.crop-overlay.show{display:block}
+.crop-overlay img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.crop-overlay .crop-mask{position:absolute;inset:0;background:rgba(0,0,0,.55);pointer-events:none}
+.crop-overlay .crop-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55);pointer-events:none}
+.crop-hint{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 24px;border-radius:10px;font-size:.95rem;font-weight:600;z-index:201;pointer-events:none}
+.crop-actions{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:12px;z-index:201}
+.crop-actions button{padding:10px 28px;border:none;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.crop-btn-ok{background:#fff;color:#1a5276}
+.crop-btn-ok:hover{background:var(--teal);color:#fff}
+.crop-btn-cancel{background:rgba(255,255,255,.2);color:#fff}
+.crop-btn-cancel:hover{background:rgba(255,255,255,.35)}
+
 .upload-area{border:2px dashed var(--teal-md);border-radius:12px;background:var(--teal-lt);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .upload-area:hover{border-color:var(--teal);background:#d4f0f0}
 .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
@@ -390,6 +404,17 @@ body.elder .simple-slot-hd{font-size:1.2rem}
     </div>
     <div class="cat-tabs" id="catTabs"></div>
     <div class="drug-grid" id="drugGrid"></div>
+  </div>
+</div>
+
+<!-- 截圖裁切 -->
+<div class="crop-overlay" id="cropOverlay">
+  <img id="cropImg">
+  <div class="crop-box" id="cropBox"></div>
+  <div class="crop-hint" id="cropHint">拖曳選取處方區域</div>
+  <div class="crop-actions" id="cropActions" style="display:none">
+    <button class="crop-btn-cancel" onclick="closeCrop()">取消</button>
+    <button class="crop-btn-ok" onclick="confirmCrop()">確認選取</button>
   </div>
 </div>
 
@@ -741,8 +766,11 @@ function loadFile(file) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// 螢幕截圖
+// 螢幕截圖 + 拉框裁切
 // ══════════════════════════════════════════════════════════════════
+let fullScreenDataURL = null;
+let cropStart = null, cropEnd = null, isCropping = false;
+
 async function captureScreen() {
   try {
     const stream = await navigator.mediaDevices.getDisplayMedia({
@@ -751,17 +779,61 @@ async function captureScreen() {
     const video = document.createElement('video');
     video.srcObject = stream;
     await video.play();
-
-    // wait a frame for video to render
     await new Promise(r => requestAnimationFrame(r));
 
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
-
-    // stop screen share
     stream.getTracks().forEach(t => t.stop());
+
+    fullScreenDataURL = canvas.toDataURL('image/png');
+    openCrop(fullScreenDataURL);
+  } catch (err) {
+    if (err.name !== 'NotAllowedError') alert('截圖失敗：' + err.message);
+  }
+}
+
+function openCrop(dataURL) {
+  const overlay = document.getElementById('cropOverlay');
+  const img = document.getElementById('cropImg');
+  const box = document.getElementById('cropBox');
+  img.src = dataURL;
+  box.style.display = 'none';
+  document.getElementById('cropActions').style.display = 'none';
+  document.getElementById('cropHint').style.display = 'block';
+  overlay.classList.add('show');
+  cropStart = cropEnd = null;
+}
+
+function closeCrop() {
+  document.getElementById('cropOverlay').classList.remove('show');
+}
+
+function confirmCrop() {
+  if (!cropStart || !cropEnd || !fullScreenDataURL) return;
+  const img = document.getElementById('cropImg');
+  const rect = img.getBoundingClientRect();
+
+  // calculate crop coordinates relative to original image
+  const origImg = new Image();
+  origImg.onload = () => {
+    const scaleX = origImg.width / rect.width;
+    const scaleY = origImg.height / rect.height;
+
+    const x1 = Math.min(cropStart.x, cropEnd.x) - rect.left;
+    const y1 = Math.min(cropStart.y, cropEnd.y) - rect.top;
+    const w = Math.abs(cropEnd.x - cropStart.x);
+    const h = Math.abs(cropEnd.y - cropStart.y);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w * scaleX;
+    canvas.height = h * scaleY;
+    canvas.getContext('2d').drawImage(
+      origImg,
+      x1 * scaleX, y1 * scaleY, w * scaleX, h * scaleY,
+      0, 0, canvas.width, canvas.height
+    );
 
     imgType = 'image/png';
     const dataURL = canvas.toDataURL('image/png');
@@ -771,13 +843,55 @@ async function captureScreen() {
     p.src = dataURL;
     p.style.display = 'block';
     document.getElementById('analyseBtn').disabled = false;
-  } catch (err) {
-    // user cancelled screen share — do nothing
-    if (err.name !== 'NotAllowedError') {
-      alert('截圖失敗：' + err.message);
-    }
-  }
+
+    closeCrop();
+  };
+  origImg.src = fullScreenDataURL;
 }
+
+// crop drag events
+(function initCrop() {
+  const overlay = document.getElementById('cropOverlay');
+  const box = document.getElementById('cropBox');
+
+  overlay.addEventListener('mousedown', e => {
+    if (e.target.tagName === 'BUTTON') return;
+    isCropping = true;
+    cropStart = { x: e.clientX, y: e.clientY };
+    cropEnd = { x: e.clientX, y: e.clientY };
+    box.style.display = 'block';
+    document.getElementById('cropHint').style.display = 'none';
+    document.getElementById('cropActions').style.display = 'none';
+    updateCropBox();
+  });
+
+  overlay.addEventListener('mousemove', e => {
+    if (!isCropping) return;
+    cropEnd = { x: e.clientX, y: e.clientY };
+    updateCropBox();
+  });
+
+  overlay.addEventListener('mouseup', () => {
+    if (!isCropping) return;
+    isCropping = false;
+    const w = Math.abs(cropEnd.x - cropStart.x);
+    const h = Math.abs(cropEnd.y - cropStart.y);
+    if (w > 20 && h > 20) {
+      document.getElementById('cropActions').style.display = 'flex';
+    }
+  });
+
+  function updateCropBox() {
+    const x = Math.min(cropStart.x, cropEnd.x);
+    const y = Math.min(cropStart.y, cropEnd.y);
+    const w = Math.abs(cropEnd.x - cropStart.x);
+    const h = Math.abs(cropEnd.y - cropStart.y);
+    box.style.left = x + 'px';
+    box.style.top = y + 'px';
+    box.style.width = w + 'px';
+    box.style.height = h + 'px';
+  }
+})();
 
 // ══════════════════════════════════════════════════════════════════
 // Claude API
