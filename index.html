@@ -43,6 +43,9 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--paper);color:var(--i
 .sidebar{background:#fff;border-right:1px solid var(--border);padding:22px 18px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
 .label-sm{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 
+.btn-screenshot{width:100%;padding:14px;background:linear-gradient(135deg,#2980b9,#1a5276);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;margin-bottom:10px;transition:all .2s;box-shadow:0 2px 8px rgba(26,82,118,.3)}
+.btn-screenshot:hover{background:linear-gradient(135deg,#1a6da0,#14405e);box-shadow:0 4px 14px rgba(26,82,118,.4);transform:translateY(-1px)}
+
 .upload-area{border:2px dashed var(--teal-md);border-radius:12px;background:var(--teal-lt);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .upload-area:hover{border-color:var(--teal);background:#d4f0f0}
 .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
@@ -333,13 +336,14 @@ body.elder .simple-slot-hd{font-size:1.2rem}
   <div class="layout">
     <div class="sidebar">
       <div>
-        <div class="label-sm">上傳處方截圖</div>
+        <div class="label-sm">擷取處方畫面</div>
+        <button class="btn-screenshot" onclick="captureScreen()">螢幕截圖</button>
         <div class="upload-area" id="uploadArea">
           <input type="file" accept="image/*" id="fileInput">
           <div class="upload-icon">📋</div>
           <div class="upload-text">
-            <strong>點擊選擇 或 拖曳圖片</strong>
-            診所系統截圖、PNG / JPG
+            <strong>或 點擊上傳圖片</strong>
+            PNG / JPG
           </div>
         </div>
         <img id="preview" alt="預覽">
@@ -734,6 +738,45 @@ function loadFile(file) {
     document.getElementById('analyseBtn').disabled = false;
   };
   reader.readAsDataURL(file);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 螢幕截圖
+// ══════════════════════════════════════════════════════════════════
+async function captureScreen() {
+  try {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: { mediaSource: 'screen' }
+    });
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    await video.play();
+
+    // wait a frame for video to render
+    await new Promise(r => requestAnimationFrame(r));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    // stop screen share
+    stream.getTracks().forEach(t => t.stop());
+
+    imgType = 'image/png';
+    const dataURL = canvas.toDataURL('image/png');
+    imgBase64 = dataURL.split(',')[1];
+
+    const p = document.getElementById('preview');
+    p.src = dataURL;
+    p.style.display = 'block';
+    document.getElementById('analyseBtn').disabled = false;
+  } catch (err) {
+    // user cancelled screen share — do nothing
+    if (err.name !== 'NotAllowedError') {
+      alert('截圖失敗：' + err.message);
+    }
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════
