@@ -338,9 +338,9 @@ body.elder .simple-slot-hd{font-size:1.2rem}
           <input type="file" accept="image/*" id="fileInput">
           <div class="upload-icon">📋</div>
           <div class="upload-text">
-            <strong>拖曳截圖到這裡</strong>
+            <strong>拖曳截圖 或 Ctrl+V 貼上</strong>
             或點擊選擇檔案<br>
-            <span style="font-size:.72rem;opacity:.7">Mac: Cmd+Shift+4 截圖後拖進來</span>
+            <span style="font-size:.72rem;opacity:.7">Mac: Cmd+Shift+4 ｜ Win: Win+Shift+S</span>
           </div>
         </div>
         <img id="preview" alt="預覽">
@@ -721,6 +721,19 @@ ua.addEventListener('dragleave', () => ua.classList.remove('drag'));
 ua.addEventListener('drop', e => {
   e.preventDefault(); ua.classList.remove('drag');
   loadFile(e.dataTransfer.files[0]);
+});
+
+// 支援 Ctrl+V / Cmd+V 貼上截圖
+document.addEventListener('paste', e => {
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      loadFile(item.getAsFile());
+      return;
+    }
+  }
 });
 
 function loadFile(file) {
