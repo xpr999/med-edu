@@ -330,12 +330,6 @@ body.elder .simple-slot-hd{font-size:1.2rem}
 
 <!-- ===== 衛教生成頁 ===== -->
 <div class="page active" id="pageEdu">
-  <div class="key-bar" id="keyBar">
-    <span>Claude API Key：</span>
-    <input type="password" id="keyInput" placeholder="sk-ant-... （輸入後會儲存在瀏覽器）">
-    <button onclick="saveKey()">儲存</button>
-  </div>
-
   <div class="layout">
     <div class="sidebar">
       <div>
@@ -746,16 +740,9 @@ function loadFile(file) {
 // Claude API
 // ══════════════════════════════════════════════════════════════════
 async function callClaude(messages) {
-  const key = getKey();
-  if (!key) throw new Error('請先設定 Claude API Key');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('/api/claude', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 4096,
@@ -763,7 +750,7 @@ async function callClaude(messages) {
     })
   });
   const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
+  if (data.error) throw new Error(data.error.message || data.error);
   const text = data.content?.[0]?.text || '{}';
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   return jsonMatch ? jsonMatch[0] : '{}';

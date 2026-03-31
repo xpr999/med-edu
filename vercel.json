@@ -1,0 +1,7 @@
+{
+  "framework": null,
+  "outputDirectory": ".",
+  "functions": {
+    "api/*.js": { "maxDuration": 30 }
+  }
+}
