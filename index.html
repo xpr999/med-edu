@@ -240,6 +240,40 @@ body.elder .simple-pill-name{font-size:1rem}
 body.elder .simple-pill-dose{font-size:.88rem}
 body.elder .simple-slot-hd{font-size:1.2rem}
 
+/* ===== SUPPLEMENT PAGE ===== */
+.supp-container{max-width:1100px;margin:0 auto;padding:24px}
+.supp-header{margin-bottom:20px}
+.supp-header h2{font-family:'Noto Serif TC',serif;font-size:1.2rem;color:var(--teal)}
+.supp-header p{font-size:.78rem;color:var(--muted);margin-top:4px}
+
+.cond-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.cond-tag{padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer;border:2px solid var(--border);background:#fff;color:var(--muted);transition:all .2s}
+.cond-tag:hover{border-color:var(--teal);color:var(--teal)}
+.cond-tag.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+.supp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.supp-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s}
+.supp-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.supp-card-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
+.supp-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.supp-icon.epa{background:#e8f5e9;color:#2e7d32}
+.supp-icon.sleep{background:#ede7f6;color:#4a148c}
+.supp-icon.mineral{background:#e3f2fd;color:#1565c0}
+.supp-icon.vita{background:#fff8e1;color:#f57f17}
+.supp-icon.gut{background:#fce4ec;color:#c62828}
+.supp-icon.eye{background:#e0f7fa;color:#00695c}
+.supp-icon.preg{background:#fce4ec;color:#ad1457}
+.supp-icon.inflam{background:#fff3e0;color:#e65100}
+.supp-card-title{font-weight:700;font-size:.95rem;color:var(--ink)}
+.supp-card-sub{font-size:.76rem;color:var(--teal);margin-top:2px}
+.supp-card-body{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.supp-info-row{display:flex;gap:8px;font-size:.8rem;line-height:1.5}
+.supp-info-label{font-weight:600;color:var(--muted);white-space:nowrap;min-width:50px}
+.supp-info-val{color:var(--ink)}
+.supp-mechanism{background:var(--teal-lt);border:1px solid var(--teal-md);border-radius:8px;padding:10px 12px;font-size:.8rem;color:#0a5050;line-height:1.6}
+.supp-conds{display:flex;gap:5px;flex-wrap:wrap}
+.supp-cond-tag{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:2px 10px;font-size:.72rem;color:var(--muted);font-weight:500}
+
 /* EDIT LIST */
 .edit-item{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:8px;position:relative}
 .edit-item .edit-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
@@ -337,6 +371,7 @@ body.elder .simple-slot-hd{font-size:1.2rem}
 <div class="nav-tabs">
   <div class="nav-tab active" onclick="switchPage('edu')">衛教生成</div>
   <div class="nav-tab" onclick="switchPage('mgmt')">藥物管理</div>
+  <div class="nav-tab" onclick="switchPage('supp')">營養品推薦</div>
 </div>
 
 <!-- ===== 衛教生成頁 ===== -->
@@ -401,6 +436,18 @@ body.elder .simple-slot-hd{font-size:1.2rem}
     </div>
     <div class="cat-tabs" id="catTabs"></div>
     <div class="drug-grid" id="drugGrid"></div>
+  </div>
+</div>
+
+<!-- ===== 營養品推薦頁 ===== -->
+<div class="page" id="pageSupp">
+  <div class="supp-container">
+    <div class="supp-header">
+      <h2>營養品推薦</h2>
+      <p>點選症狀或疾病，查看適合的營養補充品與作用機制（宸華生技）</p>
+    </div>
+    <div class="cond-tags" id="condTags"></div>
+    <div class="supp-grid" id="suppGrid"></div>
   </div>
 </div>
 
@@ -621,11 +668,13 @@ async function getAllPhotos() {
 // ══════════════════════════════════════════════════════════════════
 function switchPage(page) {
   document.querySelectorAll('.nav-tab').forEach((t,i) => {
-    t.classList.toggle('active', (page==='edu' && i===0)||(page==='mgmt' && i===1));
+    t.classList.toggle('active', (page==='edu'&&i===0)||(page==='mgmt'&&i===1)||(page==='supp'&&i===2));
   });
   document.getElementById('pageEdu').classList.toggle('active', page==='edu');
   document.getElementById('pageMgmt').classList.toggle('active', page==='mgmt');
+  document.getElementById('pageSupp').classList.toggle('active', page==='supp');
   if (page === 'mgmt') renderMgmt();
+  if (page === 'supp') renderSupp();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1348,6 +1397,108 @@ async function deleteDrug(code) {
   saveCustomDrugs(customs);
   await deletePhoto(code);
   renderMgmt();
+}
+
+// ══════════════════════════════════════════════════════════════════
+// 營養品資料庫（宸華生技）
+// ══════════════════════════════════════════════════════════════════
+const SUPP_DB = [
+  {name:"超護芯 EPA1000plus",sub:"大膠囊",ingredient:"EPA 1000mg（≥99%）",form:"軟膠囊 30粒/盒",dosage:"每日1-2粒，餐後",icon:"epa",
+   conds:["憂鬱症","心血管","偏頭痛","血脂異常","洗腎搔癢"],
+   mechanism:"高純度 EPA 透過抑制促發炎因子（IL-6、TNF-α）降低神經發炎，同時調節血清素與多巴胺傳導，改善憂鬱情緒。亦能有效降低三酸甘油酯，預防心血管疾病。"},
+  {name:"護芯寧 EPA 900",sub:"大膠囊",ingredient:"EPA 1000mg（≥90%，實測93-95%）",form:"軟膠囊 30粒/盒",dosage:"每日1-2粒，餐後",icon:"epa",
+   conds:["憂鬱症","心血管","偏頭痛","血脂異常","洗腎搔癢"],
+   mechanism:"高純度 EPA 抗發炎、調節神經傳導，降低三酸甘油酯。純度略低於99%版本，但臨床效果相近，性價比高。"},
+  {name:"超護芯 mini",sub:"小膠囊",ingredient:"EPA 500mg（≥99%）",form:"軟膠囊 30粒/盒",dosage:"每日1-3粒，餐後",icon:"epa",
+   conds:["ADHD","憂鬱症","心血管"],
+   mechanism:"高純度 EPA 改善前額葉皮質功能，幫助注意力集中與衝動控制。研究顯示 EPA 可提升 ADHD 兒童的認知表現，同時抗發炎改善情緒。小膠囊方便兒童吞服。"},
+  {name:"護芯寧 mini",sub:"小膠囊",ingredient:"EPA 500mg（≥90%）",form:"軟膠囊 30粒/盒",dosage:"每日1-3粒，餐後",icon:"epa",
+   conds:["ADHD","憂鬱症","心血管"],
+   mechanism:"EPA 改善注意力與衝動控制、抗發炎。適合需要較低單顆劑量的兒童或青少年，可依體重調整每日粒數。"},
+  {name:"歐美芯 OMEGA3 920",sub:"EPA+DHA複方",ingredient:"EPA 460mg + DHA 380mg（≥84%）",form:"軟膠囊 30粒/盒",dosage:"每日1-2粒，餐後",icon:"epa",
+   conds:["乾眼症","關節炎","慢性發炎","癌症術後"],
+   mechanism:"EPA 抗發炎搭配 DHA 修護視網膜與神經細胞膜。DHA 是視網膜感光細胞的主要結構脂肪酸，可改善乾眼症狀；EPA 則緩解關節發炎。"},
+  {name:"安芯眠 SaTriGa S30",sub:"助眠複方",ingredient:"GABA + 色胺酸 + 番紅花",form:"膠囊 30-60粒/盒",dosage:"睡前1-2小時，輕度1-2顆/中重度2-4顆",icon:"sleep",
+   conds:["睡眠障礙","焦慮症"],
+   mechanism:"三重助眠機制：GABA 直接活化抑制性神經受體，快速鎮靜安神；色胺酸為褪黑激素前驅物，經5-HTP轉化後調節睡眠週期；番紅花中的 crocin 具抗焦慮作用，降低入睡前的焦慮思緒。"},
+  {name:"安鋅鎂 ZnMg",sub:"鋅鎂複方",ingredient:"微囊化鋅 10mg + 鎂 50mg",form:"咀嚼錠 30-60粒/盒",dosage:"每日1-2粒，勿超過2粒",icon:"mineral",
+   conds:["ADHD","憂鬱症","焦慮症","免疫力"],
+   mechanism:"鋅參與超過300種酵素反應，是多巴胺合成的必要輔因子，缺鋅與 ADHD 症狀惡化有關。鎂為 NMDA 受體的天然拮抗劑，穩定神經興奮性、緩解焦慮與肌肉緊張。微囊化技術提升吸收率。"},
+  {name:"安心葉 PFA 800",sub:"活性葉酸",ingredient:"活性葉酸 5-MTHF 400µg",form:"素食膠囊 60粒/盒",dosage:"每日1粒，餐前",icon:"preg",
+   conds:["懷孕哺乳"],
+   mechanism:"第四代活性葉酸，不需要 MTHFR 酵素轉化即可直接利用。約30%亞洲人帶有 MTHFR 基因變異，傳統葉酸無法有效轉化，活性葉酸跳過此步驟，吸收率為傳統的10倍，有效預防胎兒神經管缺陷。"},
+  {name:"藻安心 DHA",sub:"植物性DHA",ingredient:"藻油 DHA 255mg（≥85%）",form:"小顆粒軟膠囊（純素）30粒/盒",dosage:"每日1粒，餐後",icon:"preg",
+   conds:["懷孕哺乳","兒童發育"],
+   mechanism:"藻油萃取的 DHA 是胎兒腦部灰質與視網膜的核心建構材料。孕期補充 DHA 可促進胎兒認知發展與視覺發育。純植物來源，無海洋重金屬汙染疑慮，素食者可食。"},
+  {name:"易舒延 SPM Plus",sub:"抗發炎專方",ingredient:"EPA 500mg + SPMs 0.05%",form:"軟膠囊 30粒/盒",dosage:"每日1-4粒，餐後",icon:"inflam",
+   conds:["慢性發炎"],
+   mechanism:"EPA 抑制發炎啟動，SPMs（特殊促解消介質）則主動促進發炎消退與組織修復。一般抗發炎只做到「踩煞車」，SPMs 則是「清理戰場」，雙管齊下加速慢性發炎的完整消退。"},
+  {name:"好芯亮 Lutein Plus",sub:"護眼護心",ingredient:"EPA 500mg + 專利游離型葉黃素",form:"軟膠囊 30粒/盒",dosage:"每日1-2粒，餐後",icon:"eye",
+   conds:["護眼","心血管"],
+   mechanism:"EPA 護心抗發炎，游離型葉黃素（free-form lutein）不需經過消化酵素水解即可直接吸收，能有效過濾藍光、保護黃斑部。適合長時間使用3C產品的學齡兒童與上班族。"},
+  {name:"D3 晶球膠囊",sub:"維生素D3",ingredient:"維生素 D3 800 I.U.",form:"無縫晶球微粒膠囊 60粒/盒",dosage:"憂鬱/過動：每日3顆｜懷孕：每日1顆",icon:"vita",
+   conds:["ADHD","憂鬱症","懷孕哺乳"],
+   mechanism:"維生素 D3 受體廣泛分布於大腦海馬迴與前額葉，參與血清素合成調控。研究顯示 ADHD 與憂鬱症患者普遍維生素D不足，補充後可改善情緒與認知功能。同時促進鈣吸收，孕期補充有助胎兒骨骼發育。"},
+  {name:"專利多層包覆益生菌",sub:"腸腦軸調節",ingredient:"11種益生菌 >200億 CFU",form:"粉劑 30包/盒",dosage:"每日1次，每次1包",icon:"gut",
+   conds:["ADHD","憂鬱症","過敏","懷孕哺乳"],
+   mechanism:"腸道菌叢透過「腸腦軸」影響大腦功能：腸道製造約95%的血清素與50%的多巴胺。多元菌株可調節腸道微環境，改善神經傳導物質的產生。三層包覆技術（蛋白質→多醣→脂質）確保菌株通過胃酸活抵腸道。"}
+];
+
+const CONDITIONS = [
+  {key:"憂鬱症",label:"憂鬱症"},
+  {key:"ADHD",label:"ADHD / 注意力不足"},
+  {key:"焦慮症",label:"焦慮 / 恐慌"},
+  {key:"睡眠障礙",label:"睡眠障礙"},
+  {key:"懷孕哺乳",label:"懷孕 / 哺乳"},
+  {key:"心血管",label:"心血管"},
+  {key:"慢性發炎",label:"慢性發炎"},
+  {key:"護眼",label:"護眼"},
+  {key:"過敏",label:"過敏"},
+  {key:"免疫力",label:"免疫力"}
+];
+
+let activeCond = null;
+
+function renderSupp() {
+  const tagsEl = document.getElementById('condTags');
+  tagsEl.innerHTML = CONDITIONS.map(c =>
+    `<div class="cond-tag${activeCond===c.key?' active':''}" onclick="filterCond('${c.key}')">${c.label}</div>`
+  ).join('');
+
+  const grid = document.getElementById('suppGrid');
+  const filtered = activeCond
+    ? SUPP_DB.filter(s => s.conds.includes(activeCond))
+    : SUPP_DB;
+
+  grid.innerHTML = filtered.map(s => `
+    <div class="supp-card">
+      <div class="supp-card-head">
+        <div class="supp-icon ${s.icon}">
+          ${{epa:'🐟',sleep:'🌙',mineral:'⚡',vita:'☀️',gut:'🦠',eye:'👁',preg:'🤰',inflam:'🔥'}[s.icon]||'💊'}
+        </div>
+        <div>
+          <div class="supp-card-title">${s.name}</div>
+          <div class="supp-card-sub">${s.sub} — ${s.ingredient}</div>
+        </div>
+      </div>
+      <div class="supp-card-body">
+        <div class="supp-info-row">
+          <span class="supp-info-label">劑型</span>
+          <span class="supp-info-val">${s.form}</span>
+        </div>
+        <div class="supp-info-row">
+          <span class="supp-info-label">用量</span>
+          <span class="supp-info-val">${s.dosage}</span>
+        </div>
+        <div class="supp-mechanism">${s.mechanism}</div>
+        <div class="supp-conds">${s.conds.map(c=>`<span class="supp-cond-tag">${c}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function filterCond(key) {
+  activeCond = activeCond === key ? null : key;
+  renderSupp();
 }
 
 // close modal on overlay click
