@@ -243,8 +243,8 @@ body.elder .simple-slot-hd{font-size:1.2rem}
 /* EDIT LIST */
 .edit-item{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:8px;position:relative}
 .edit-item .edit-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
-.edit-item input{border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:.78rem;font-family:inherit;width:100%;color:var(--ink)}
-.edit-item input:focus{outline:none;border-color:var(--teal)}
+.edit-item input,.edit-item select{border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:.78rem;font-family:inherit;width:100%;color:var(--ink);background:#fff}
+.edit-item input:focus,.edit-item select:focus{outline:none;border-color:var(--teal)}
 .edit-item .edit-label{font-size:.62rem;color:var(--muted);font-weight:600;margin-bottom:2px}
 .edit-item .edit-del{position:absolute;top:6px;right:6px;background:none;border:none;color:#ccc;cursor:pointer;font-size:.9rem;padding:2px 5px}
 .edit-item .edit-del:hover{color:var(--warn)}
@@ -834,7 +834,7 @@ async function analyse() {
 
 注意：
 - 請盡量比對診所代碼
-- frequency請翻譯成中文(QD=每日一次, BID=每日兩次, TID=每日三次, QID=每日四次, HS=睡前, PRN=需要時)
+- frequency請用英文縮寫(QD/BID/TID/QID/HS/PRN)
 - 若截圖模糊請盡量推測${extra ? `\n\n補充說明：${extra}` : ''}`;
 
     const raw1 = await callClaude([{
@@ -858,6 +858,12 @@ async function analyse() {
   }
 }
 
+function matchFreqChn(freq, code) {
+  if (!freq) return false;
+  const map = {QD:'每日一次',BID:'每日兩次',TID:'每日三次',QID:'每日四次',HS:'睡前',PRN:'需要時'};
+  return (freq.includes(map[code]) || freq.toUpperCase() === code);
+}
+
 // 顯示可編輯的藥物清單
 function renderEditList(drugs) {
   const sec = document.getElementById('editSection');
@@ -873,7 +879,7 @@ function renderEditList(drugs) {
       </div>
       <div class="edit-row">
         <div><div class="edit-label">劑量</div><input class="ed-dose" value="${d.dose||''}"></div>
-        <div><div class="edit-label">頻次</div><input class="ed-freq" value="${d.frequency||''}"></div>
+        <div><div class="edit-label">頻次</div><select class="ed-freq"><option value="">--</option>${['QD','BID','TID','QID','HS','PRN'].map(f=>`<option${(d.frequency||'').toUpperCase().includes(f)||matchFreqChn(d.frequency,f)?' selected':''}>${f}</option>`).join('')}</select></div>
       </div>
       <div class="edit-row">
         <div><div class="edit-label">時機</div><input class="ed-timing" value="${d.timing||''}"></div>
@@ -896,7 +902,7 @@ function addEditRow() {
     </div>
     <div class="edit-row">
       <div><div class="edit-label">劑量</div><input class="ed-dose" value=""></div>
-      <div><div class="edit-label">頻次</div><input class="ed-freq" value=""></div>
+      <div><div class="edit-label">頻次</div><select class="ed-freq"><option value="">--</option><option>QD</option><option>BID</option><option>TID</option><option>QID</option><option>HS</option><option>PRN</option></select></div>
     </div>
     <div class="edit-row">
       <div><div class="edit-label">時機</div><input class="ed-timing" value=""></div>
@@ -999,14 +1005,13 @@ function classifyTiming(drug, eduItem) {
     }
   }
 
-  // frequency-based fallback
-  if (slots.size === 0) {
-    if (/bid|每日兩次|早晚/.test(allText)) { slots.add('morning'); slots.add('bedtime'); }
-    else if (/tid|每日三次/.test(allText)) { slots.add('morning'); slots.add('noon'); slots.add('evening'); }
-    else if (/qid|每日四次/.test(allText)) { slots.add('morning'); slots.add('noon'); slots.add('evening'); slots.add('bedtime'); }
-    else if (/qd|每日一次/.test(allText)) { slots.add('morning'); }
-    else { slots.add('morning'); }
-  }
+  // frequency-based
+  if (/\bhs\b/.test(allText)) slots.add('bedtime');
+  if (/\bbid\b|每日兩次|早晚/.test(allText)) { slots.add('morning'); slots.add('bedtime'); }
+  else if (/\btid\b|每日三次/.test(allText)) { slots.add('morning'); slots.add('noon'); slots.add('evening'); }
+  else if (/\bqid\b|每日四次/.test(allText)) { slots.add('morning'); slots.add('noon'); slots.add('evening'); slots.add('bedtime'); }
+  else if (/\bqd\b|每日一次/.test(allText) && slots.size === 0) { slots.add('morning'); }
+  if (slots.size === 0) { slots.add('morning'); }
 
   return { slots, isPRN: false };
 }
@@ -1173,12 +1178,12 @@ function renderSummaryTable(drugs, edu, photos) {
 function runDemo() {
   clearResults();
   const drugs = [
-    {brand_name:"Flupine 0.25mg",generic_name:"Fludiazepam",chinese_name:"福安源錠",code:"FLU01",dose:"0.25mg",frequency:"每日一次",timing:"早上",days:"28"},
-    {brand_name:"Mocalm 0.5/10mg",generic_name:"Flupentixol/Melitracen",chinese_name:"永康緩錠",code:"MOC00",dose:"0.5/10mg",frequency:"每日一次",timing:"早上",days:"28"},
-    {brand_name:"Alpraline 0.5mg",generic_name:"Alprazolam",chinese_name:"安柏寧錠",code:"ALP01",dose:"0.5mg",frequency:"每日一次",timing:"睡前",days:"28"},
-    {brand_name:"Valdoxan 25mg",generic_name:"Agomelatine",chinese_name:"煩多悶錠",code:"VAL00",dose:"25mg",frequency:"每日一次",timing:"睡前",days:"28"},
-    {brand_name:"Zolon 7.5mg",generic_name:"Zopiclone",chinese_name:"樂比克錠",code:"ZOL01",dose:"7.5mg",frequency:"每日一次",timing:"睡前",days:"28"},
-    {brand_name:"Solaxin 200mg",generic_name:"Chlorzoxazone",chinese_name:"舒肌筋新錠",code:"SOL00",dose:"200mg",frequency:"需要時使用",timing:"需要時",days:"7"}
+    {brand_name:"Flupine 0.25mg",generic_name:"Fludiazepam",chinese_name:"福安源錠",code:"FLU01",dose:"0.25mg",frequency:"QD",timing:"早上",days:"28"},
+    {brand_name:"Mocalm 0.5/10mg",generic_name:"Flupentixol/Melitracen",chinese_name:"永康緩錠",code:"MOC00",dose:"0.5/10mg",frequency:"QD",timing:"早上",days:"28"},
+    {brand_name:"Alpraline 0.5mg",generic_name:"Alprazolam",chinese_name:"安柏寧錠",code:"ALP01",dose:"0.5mg",frequency:"HS",timing:"睡前",days:"28"},
+    {brand_name:"Valdoxan 25mg",generic_name:"Agomelatine",chinese_name:"煩多悶錠",code:"VAL00",dose:"25mg",frequency:"HS",timing:"睡前",days:"28"},
+    {brand_name:"Zolon 7.5mg",generic_name:"Zopiclone",chinese_name:"樂比克錠",code:"ZOL01",dose:"7.5mg",frequency:"HS",timing:"睡前",days:"28"},
+    {brand_name:"Solaxin 200mg",generic_name:"Chlorzoxazone",chinese_name:"舒肌筋新錠",code:"SOL00",dose:"200mg",frequency:"PRN",timing:"需要時",days:"7"}
   ];
   const edu = [
     {index:0,purpose:"幫助穩定情緒、減輕焦慮與緊張感",schedule_times:["08:00 早餐後"],warnings:["服藥期間避免飲酒","初期可能有輕微嗜睡，開車請注意","不可自行突然停藥"],side_effects:["嗜睡","口乾","輕微頭暈","疲倦感"],appearance:"白色圓形小錠，一面有刻痕",patient_note:"這顆藥會幫助您白天的情緒更穩定，如果覺得太累可以跟醫師討論調整。"},
