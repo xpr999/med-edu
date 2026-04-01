@@ -240,6 +240,17 @@ body.elder .simple-pill-name{font-size:1rem}
 body.elder .simple-pill-dose{font-size:.88rem}
 body.elder .simple-slot-hd{font-size:1.2rem}
 
+/* EDIT LIST */
+.edit-item{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:8px;position:relative}
+.edit-item .edit-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+.edit-item input{border:1px solid var(--border);border-radius:5px;padding:5px 8px;font-size:.78rem;font-family:inherit;width:100%;color:var(--ink)}
+.edit-item input:focus{outline:none;border-color:var(--teal)}
+.edit-item .edit-label{font-size:.62rem;color:var(--muted);font-weight:600;margin-bottom:2px}
+.edit-item .edit-del{position:absolute;top:6px;right:6px;background:none;border:none;color:#ccc;cursor:pointer;font-size:.9rem;padding:2px 5px}
+.edit-item .edit-del:hover{color:var(--warn)}
+.edit-add{width:100%;padding:8px;border:2px dashed var(--border);border-radius:9px;background:none;cursor:pointer;font-size:.82rem;color:var(--muted);font-family:inherit;margin-top:4px;transition:all .2s}
+.edit-add:hover{border-color:var(--teal);color:var(--teal)}
+
 .upload-area.drag{border-color:var(--teal);background:#c8ecec}
 
 /* ===== DRUG MANAGEMENT PAGE ===== */
@@ -360,9 +371,12 @@ body.elder .simple-slot-hd{font-size:1.2rem}
       <button class="btn-analyse" style="background:#6a1b9a;box-shadow:0 2px 8px rgba(106,27,154,.3)" onclick="runDemo()">
         <span class="btn-text">展示模式（免 API Key）</span>
       </button>
-      <div id="chipSection" style="display:none">
-        <div class="label-sm">辨識到的藥物</div>
-        <div class="chip-list" id="chipList"></div>
+      <div id="editSection" style="display:none">
+        <div class="label-sm">辨識結果（可編輯）</div>
+        <div id="editList"></div>
+        <button class="btn-analyse" style="margin-top:10px" onclick="generateFromEdit()">
+          <span class="btn-text">確認，生成衛教單</span>
+        </button>
       </div>
     </div>
 
@@ -797,6 +811,7 @@ function matchDrug(d) {
 // ══════════════════════════════════════════════════════════════════
 // 分析處方
 // ══════════════════════════════════════════════════════════════════
+// Step 1: AI 辨識藥物 → 顯示可編輯清單
 async function analyse() {
   if (!imgBase64) return;
   const btn = document.getElementById('analyseBtn');
@@ -832,9 +847,91 @@ async function analyse() {
     const { drugs } = JSON.parse(raw1);
     if (!drugs?.length) { showError('未辨識到藥物', '請確認截圖包含處方內容'); return; }
 
-    renderChips(drugs);
-    btn.querySelector('.btn-text').textContent = '生成衛教內容中…';
+    renderEditList(drugs);
 
+  } catch (err) {
+    showError('分析失敗', err.message);
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent = '辨識並生成衛教單';
+  }
+}
+
+// 顯示可編輯的藥物清單
+function renderEditList(drugs) {
+  const sec = document.getElementById('editSection');
+  const list = document.getElementById('editList');
+  sec.style.display = 'block';
+
+  list.innerHTML = drugs.map((d, i) => `
+    <div class="edit-item" data-idx="${i}">
+      <button class="edit-del" onclick="this.parentElement.remove()" title="刪除">✕</button>
+      <div class="edit-row">
+        <div><div class="edit-label">藥名</div><input class="ed-name" value="${d.brand_name||d.chinese_name||''}"></div>
+        <div><div class="edit-label">學名</div><input class="ed-generic" value="${d.generic_name||''}"></div>
+      </div>
+      <div class="edit-row">
+        <div><div class="edit-label">劑量</div><input class="ed-dose" value="${d.dose||''}"></div>
+        <div><div class="edit-label">頻次</div><input class="ed-freq" value="${d.frequency||''}"></div>
+      </div>
+      <div class="edit-row">
+        <div><div class="edit-label">時機</div><input class="ed-timing" value="${d.timing||''}"></div>
+        <div><div class="edit-label">天數</div><input class="ed-days" value="${d.days||''}"></div>
+      </div>
+    </div>`).join('');
+
+  list.insertAdjacentHTML('beforeend',
+    `<button class="edit-add" onclick="addEditRow()">+ 新增藥物</button>`);
+}
+
+function addEditRow() {
+  const list = document.getElementById('editList');
+  const addBtn = list.querySelector('.edit-add');
+  const html = `<div class="edit-item">
+    <button class="edit-del" onclick="this.parentElement.remove()" title="刪除">✕</button>
+    <div class="edit-row">
+      <div><div class="edit-label">藥名</div><input class="ed-name" value=""></div>
+      <div><div class="edit-label">學名</div><input class="ed-generic" value=""></div>
+    </div>
+    <div class="edit-row">
+      <div><div class="edit-label">劑量</div><input class="ed-dose" value=""></div>
+      <div><div class="edit-label">頻次</div><input class="ed-freq" value=""></div>
+    </div>
+    <div class="edit-row">
+      <div><div class="edit-label">時機</div><input class="ed-timing" value=""></div>
+      <div><div class="edit-label">天數</div><input class="ed-days" value=""></div>
+    </div>
+  </div>`;
+  addBtn.insertAdjacentHTML('beforebegin', html);
+}
+
+// Step 2: 從編輯清單生成衛教單
+async function generateFromEdit() {
+  const items = document.querySelectorAll('#editList .edit-item');
+  const drugs = [];
+  items.forEach(el => {
+    const name = el.querySelector('.ed-name')?.value.trim();
+    if (!name) return;
+    drugs.push({
+      brand_name: name,
+      generic_name: el.querySelector('.ed-generic')?.value.trim() || '',
+      chinese_name: name,
+      dose: el.querySelector('.ed-dose')?.value.trim() || '',
+      frequency: el.querySelector('.ed-freq')?.value.trim() || '',
+      timing: el.querySelector('.ed-timing')?.value.trim() || '',
+      days: el.querySelector('.ed-days')?.value.trim() || null
+    });
+  });
+
+  if (!drugs.length) { showError('沒有藥物', '請至少保留一筆藥物'); return; }
+
+  const btn = document.querySelector('#editSection .btn-analyse');
+  btn.disabled = true;
+  btn.querySelector('.btn-text').textContent = '生成衛教內容中…';
+  clearResults();
+
+  try {
     const eduPrompt = `你是一位資深精神科護理師和臨床藥師，使用繁體中文。請為以下藥物生成衛教說明和交互作用檢查，以純JSON格式回傳。
 
 藥物列表：
@@ -850,16 +947,15 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 - patient_note 溫暖易懂，像護理師在跟病患說話
 - interactions 檢查所有藥物之間的交互作用，只列出臨床上重要的，level: high=嚴重禁忌, mid=需注意, low=輕微。如果沒有交互作用就回傳空陣列`;
 
-    const raw2 = await callClaude([{ role: 'user', content: eduPrompt }]);
-    const parsed2 = JSON.parse(raw2);
-    await renderCards(drugs, parsed2.edu || [], parsed2.interactions || []);
+    const raw = await callClaude([{ role: 'user', content: eduPrompt }]);
+    const parsed = JSON.parse(raw);
+    await renderCards(drugs, parsed.edu || [], parsed.interactions || []);
 
   } catch (err) {
-    showError('分析失敗', err.message);
+    showError('生成失敗', err.message);
   } finally {
     btn.disabled = false;
-    btn.classList.remove('loading');
-    btn.querySelector('.btn-text').textContent = '辨識並生成衛教單';
+    btn.querySelector('.btn-text').textContent = '確認，生成衛教單';
   }
 }
 
@@ -868,27 +964,7 @@ ${drugs.map((d,i)=>`[${i}] ${d.brand_name||''} (${d.generic_name||''}) ${d.dose|
 // ══════════════════════════════════════════════════════════════════
 function clearResults() {
   document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('chipSection').style.display = 'none';
   document.getElementById('mainPanel').querySelectorAll('.edu-top,.drug-card,.err-box,.sched-wrap,.interact-wrap,.simple-card,.summary-wrap').forEach(e=>e.remove());
-}
-
-function renderChips(drugs) {
-  if (!drugs.length) return;
-  const sec = document.getElementById('chipSection');
-  const list = document.getElementById('chipList');
-  sec.style.display = 'block';
-  list.innerHTML = drugs.map((d,i) => {
-    const db = matchDrug(d);
-    return `<div class="chip" onclick="scrollToCard('card-${i}')">
-      <div class="cname">${db?.alias || d.brand_name || d.chinese_name || d.generic_name}</div>
-      <div class="cmeta">${d.generic_name||''} · ${d.dose||''} · ${d.frequency||''}</div>
-      ${d.days ? `<span class="cbadge">${d.days}天</span>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function scrollToCard(id) {
-  document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1116,7 +1192,8 @@ function runDemo() {
     {drug_a:"Valdoxan (煩多悶)",drug_b:"Flupine (福安源)",level:"low",description:"Agomelatine 與 Fludiazepam 併用可能增加鎮靜效果，睡前服用時注意隔日嗜睡情形。"},
     {drug_a:"Alpraline (安柏寧)",drug_b:"Zolon (樂比克)",level:"mid",description:"兩者皆為中樞神經抑制劑，併用會增強鎮靜和呼吸抑制風險。請確實依照醫師指示劑量服用，切勿自行增量。"}
   ];
-  renderChips(drugs);
+  renderEditList(drugs);
+  // also directly render with demo data (skip API call)
   renderCards(drugs, edu, interactions);
 }
 
